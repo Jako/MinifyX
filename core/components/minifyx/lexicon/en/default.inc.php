@@ -29,7 +29,7 @@ $_lang['setting_minifyx_jsFilename'] = 'Javascript filename';
 $_lang['setting_minifyx_jsFilename_desc'] = 'Specify the name of the prepared javascript file that will contain all processed scripts. To it will be added the time of creation and suffix .min, if compression is enabled.';
 
 $_lang['setting_minifyx_cacheFolder'] = 'Directory for output files';
-$_lang['setting_minifyx_cacheFolder_desc'] = 'Specify the directory where the plugin will put the results of it`s work. You can specify a non-existent directory, it will be created automatically.';
+$_lang['setting_minifyx_cacheFolder_desc'] = 'Specify the directory where the plugin will put the results of it’s work. You can specify a non-existent directory, it will be created automatically.';
 
 $_lang['setting_minifyx_processRawJs'] = 'Process raw javascript?';
 $_lang['setting_minifyx_processRawJs_desc'] = 'Do you want to move the raw javascript from the page to the file';

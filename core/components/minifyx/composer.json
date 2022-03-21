@@ -1,14 +1,25 @@
 {
-    "require": {
-        "php": ">=5.6.0",
-        "meenie/Munee": "^1.7"
-    },
-    "repositories": [
+    "name": "sergant210/minifyx",
+    "description": "Combine and minify JS and CSS files",
+    "authors": [
         {
-            "type": "vcs",
-            "url": "https://github.com/sergant210/munee"
+            "name": "Sergej Shlokov",
+            "email": "sergant210@bk.ru",
+            "homepage": "https://modzone.ru/"
+        },
+        {
+            "name": "Thomas Jakobi",
+            "email": "office@treehillstudio.com",
+            "homepage": "https://treehillstudio.com"
         }
     ],
-    "minimum-stability": "dev",
-    "prefer-stable": true
+    "require": {
+        "php": ">=7.3",
+        "assetic/framework": "3.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Sergant210\\MinifyX\\": "src/"
+        }
+    }
 }

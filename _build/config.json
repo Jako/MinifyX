@@ -1,0 +1,156 @@
+{
+  "name": "MinifyX",
+  "lowCaseName": "minifyx",
+  "description": "Combine and minify JS and CSS files",
+  "author": "Sergej Shlokov, Thomas Jakobi",
+  "version": "2.0.0",
+  "package": {
+    "elements": {
+      "plugins": [
+        {
+          "name": "MinifyX",
+          "description": "Combine and minify JS and CSS files",
+          "file": "minifyx.plugin.php",
+          "events": [
+            "OnMODXInit",
+            "OnSiteRefresh",
+            "OnWebPagePrerender"
+          ]
+        }
+      ],
+      "snippets": [
+        {
+          "name": "MinifyX",
+          "description": "Combine and minify JS and CSS files",
+          "file": "minifyx.snippet.php",
+          "properties": [
+            {
+              "name": "",
+              "value": ""
+            },
+            {
+              "name": "",
+              "type": "combo-boolean",
+              "value": "0"
+            }
+          ]
+        }
+      ]
+    },
+    "systemSettings": [
+      {
+        "key": "debug",
+        "type": "combo-boolean",
+        "area": "system",
+        "value": "0"
+      },
+      {
+        "key": "process_registered",
+        "type": "combo-boolean",
+        "area": "system",
+        "value": "0"
+      },
+      {
+        "key": "process_images",
+        "type": "combo-boolean",
+        "area": "system",
+        "value": "0"
+      },
+      {
+        "key": "exclude_registered",
+        "area": "system",
+        "value": "#(scripts|styles)_[a-z0-9]{10}\\.#i"
+      },
+      {
+        "key": "exclude_images",
+        "area": "system",
+        "value": "#(thumb|/\\d+x\\d+/)#i"
+      },
+      {
+        "key": "images_filters",
+        "area": "system",
+        "value": "s[true]"
+      },
+      {
+        "key": "minifyJs",
+        "type": "combo-boolean",
+        "area": "system",
+        "value": "0"
+      },
+      {
+        "key": "minifyCss",
+        "type": "combo-boolean",
+        "area": "system",
+        "value": "0"
+      },
+      {
+        "key": "processRawJs",
+        "type": "combo-boolean",
+        "area": "system",
+        "value": "0"
+      },
+      {
+        "key": "processRawCss",
+        "type": "combo-boolean",
+        "area": "system",
+        "value": "0"
+      },
+      {
+        "key": "jsFilename",
+        "area": "system",
+        "value": "all"
+      },
+      {
+        "key": "cssFilename",
+        "area": "system",
+        "value": "all"
+      },
+      {
+        "key": "cacheFolder",
+        "area": "system",
+        "value": "/assets/components/minifyx/cache/"
+      },
+      {
+        "key": "forceUpdate",
+        "type": "combo-boolean",
+        "area": "system",
+        "value": "0"
+      },
+      {
+        "key": "forceDelete",
+        "type": "combo-boolean",
+        "area": "system",
+        "value": "0"
+      },
+      {
+        "key": "minifyHtml",
+        "type": "combo-boolean",
+        "area": "system",
+        "value": "0"
+      }
+    ]
+  },
+  "dependencies": [
+    {
+      "name": "php",
+      "version": ">=7.2"
+    },
+    {
+      "name": "modx",
+      "version": ">=2.2"
+    }
+  ],
+  "build": {
+    "readme": "docs/readme.md",
+    "license": "docs/license.md",
+    "changelog": "docs/changelog.md",
+    "setupOptions": {
+      "source": "setup.options.php"
+    },
+    "resolver": {
+      "after": [
+        "resolve.treehillstudio.php"
+      ]
+    }
+  }
+}
