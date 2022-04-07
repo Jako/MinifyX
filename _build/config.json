@@ -25,13 +25,117 @@
           "file": "minifyx.snippet.php",
           "properties": [
             {
-              "name": "",
+              "name": "jsSources",
               "value": ""
             },
             {
-              "name": "",
+              "name": "cssSources",
+              "value": ""
+            },
+            {
+              "name": "minifyJs",
               "type": "combo-boolean",
               "value": "0"
+            },
+            {
+              "name": "minifyCss",
+              "type": "combo-boolean",
+              "value": "0"
+            },
+            {
+              "name": "jsFilename",
+              "value": "scripts"
+            },
+            {
+              "name": "cacheFolder",
+              "value": ""
+            },
+            {
+              "name": "cssFilename",
+              "value": "styles"
+            },
+            {
+              "name": "registerJs",
+              "type": "list",
+              "value": "placeholder",
+              "options": [
+                {
+                  "text": "minifyx.properties.placeholder",
+                  "value": "placeholder"
+                },
+                {
+                  "text": "minifyx.properties.startup",
+                  "value": "startup"
+                },
+                {
+                  "text": "minifyx.properties.default",
+                  "value": "default"
+                },
+                {
+                  "text": "minifyx.properties.print",
+                  "value": "print"
+                }
+              ]
+            },
+            {
+              "name": "jsPlaceholder",
+              "value": "MinifyX.javascript"
+            },
+            {
+              "name": "registerCss",
+              "type": "list",
+              "value": "placeholder",
+              "options": [
+                {
+                  "text": "minifyx.properties.placeholder",
+                  "value": "placeholder"
+                },
+                {
+                  "text": "minifyx.properties.default",
+                  "value": "default"
+                },
+                {
+                  "text": "minifyx.properties.print",
+                  "value": "print"
+                }
+              ]
+            },
+            {
+              "name": "cssPlaceholder",
+              "value": "MinifyX.css"
+            },
+            {
+              "name": "jsGroups",
+              "value": ""
+            },
+            {
+              "name": "cssGroups",
+              "value": ""
+            },
+            {
+              "name": "preHooks",
+              "value": ""
+            },
+            {
+              "name": "hooks",
+              "value": ""
+            },
+            {
+              "name": "cssTpl",
+              "value": "<link rel=\"stylesheet\" href=\"[[+file]]\" type=\"text/css\" />"
+            },
+            {
+              "name": "jsTpl",
+              "value": "<script src=\"[[+file]]\"></script>"
+            },
+            {
+              "name": "forceUpdate",
+              "type": "combo-boolean",
+              "value": ""
+            },
+            {
+              "name": "version",
+              "value": ""
             }
           ]
         }
@@ -108,7 +212,7 @@
       {
         "key": "cacheFolder",
         "area": "system",
-        "value": "/assets/components/minifyx/cache/"
+        "value": "assets/components/minifyx/cache/"
       },
       {
         "key": "forceUpdate",
@@ -137,7 +241,7 @@
     },
     {
       "name": "modx",
-      "version": ">=2.2"
+      "version": ">=2.8"
     }
   ],
   "build": {
@@ -149,6 +253,10 @@
     },
     "resolver": {
       "after": [
+        "resolve.composer.php",
+        "resolve.setup.php",
+        "resolve.cleanup.php",
+        "resolve.update.php",
         "resolve.treehillstudio.php"
       ]
     }
