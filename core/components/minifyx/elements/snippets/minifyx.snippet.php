@@ -1,14 +1,24 @@
 <?php
 /**
+ * MinifyX Snippet
+ *
+ * @package minifyx
+ * @subpackage snippet
+ *
+ * @var modX $modx
  * @var array $scriptProperties
- * @var MinifyX $MinifyX
  */
 
-if (isset($modx->minifyx) && $modx->minifyx instanceof MinifyX) {
-    $MinifyX = $modx->minifyx;
-    $MinifyX->reset($scriptProperties);
-} else {
-    $MinifyX = $modx->getService('minifyx', 'MinifyX', MODX_CORE_PATH . 'components/minifyx/model/minifyx/', $scriptProperties);
-}
+use TreehillStudio\MinifyX\Snippets\MinifyXSnippet;
 
-return $MinifyX->run();
+$corePath = $modx->getOption('minifyx.core_path', null, $modx->getOption('core_path') . 'components/minifyx/');
+/** @var MinifyX $minifyx */
+$minifyx = $modx->getService('minifyx', 'MinifyX', $corePath . 'model/minifyx/', [
+    'core_path' => $corePath
+]);
+
+$snippet = new MinifyXSnippet($modx, $scriptProperties);
+if ($snippet instanceof TreehillStudio\MinifyX\Snippets\MinifyXSnippet) {
+    return $snippet->execute();
+}
+return 'TreehillStudio\MinifyX\Snippets\MinifyXSnippet class not found';

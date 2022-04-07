@@ -1,25 +1,33 @@
 {
-    "name": "sergant210/minifyx",
-    "description": "Combine and minify JS and CSS files",
-    "authors": [
-        {
-            "name": "Sergej Shlokov",
-            "email": "sergant210@bk.ru",
-            "homepage": "https://modzone.ru/"
-        },
-        {
-            "name": "Thomas Jakobi",
-            "email": "office@treehillstudio.com",
-            "homepage": "https://treehillstudio.com"
-        }
-    ],
-    "require": {
-        "php": ">=7.3",
-        "assetic/framework": "3.*"
+  "name": "treehillstudio/minifyx",
+  "description": "Combine and minify JS and CSS files",
+  "authors": [
+    {
+      "name": "Sergej Shlokov",
+      "email": "sergant210@bk.ru",
+      "homepage": "https://modzone.ru"
     },
-    "autoload": {
-        "psr-4": {
-            "Sergant210\\MinifyX\\": "src/"
-        }
+    {
+      "name": "Thomas Jakobi",
+      "email": "office@treehillstudio.com",
+      "homepage": "https://treehillstudio.com"
     }
+  ],
+  "license": "GPL-2.0-or-later",
+  "config": {
+    "platform": {
+      "php": "7.3"
+    }
+  },
+  "require": {
+    "php": ">=7.3",
+    "assetic/framework": "^3",
+    "wikimedia/minify": "^2",
+    "pfaciana/tiny-html-minifier": "^3"
+  },
+  "autoload": {
+    "psr-4": {
+      "TreehillStudio\\MinifyX\\": "src/"
+    }
+  }
 }

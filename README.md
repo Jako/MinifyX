@@ -1,3 +1,5 @@
+[![Default Lexicon](https://hosted.weblate.org/widgets/modx-extras/-/modx-minifyx-standard/svg-badge.svg)](https://hosted.weblate.org/projects/modx-extras/modx-minifyx-standard/)
+
 # MinifyX
 
 Combine and minify JS and CSS files
@@ -15,8 +17,12 @@ MODX Package Management
 
 ## Usage
 
-Install via package manager and use the snippets and the FormIt hooks.
+Install via package manager and use the snippet and the plugin.
 
 ## License
 
 The project is licensed under the [GPLv2 license](https://github.com/Jako/MinifyX/blob/master/core/components/minifyx/docs/license.md).
+
+## Translations
+
+Translations of the package can be made for the [Default Lexicon](https://hosted.weblate.org/projects/modx-extras/modx-minifyx-standard/), the [Properties Lexicon](https://hosted.weblate.org/projects/modx-extras/modx-minifyx-properties/) and the [System Setting Lexicon](https://hosted.weblate.org/projects/modx-extras/modx-minifyx-system-settings/)
