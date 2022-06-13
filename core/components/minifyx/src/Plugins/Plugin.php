@@ -17,11 +17,11 @@ use MinifyX;
 abstract class Plugin
 {
     /** @var modX $modx */
-    protected $modx;
+    protected modX $modx;
     /** @var MinifyX $minifyx */
     protected $minifyx;
     /** @var array $scriptProperties */
-    protected $scriptProperties;
+    protected array $scriptProperties;
 
     /**
      * Plugin constructor.
@@ -57,17 +57,17 @@ abstract class Plugin
      *
      * @return bool
      */
-    public function init()
+    public function init(): bool
     {
         // Get selection range and selection type system settings
-        $tplOnly = (bool)$this->minifyx->getOption('tpl_only', null, true);
-        $selectionType = $this->minifyx->getOption('selection_type', null, 'exclude');
+        $tplOnly = (bool)$this->minifyx->getOption('tpl_only', [], true);
+        $selectionType = $this->minifyx->getOption('selection_type', [], 'exclude');
         $selectionRange = $this->minifyx->getOption('selection_range');
 
         // Stop plugin on selection range and selection type
-        $selectionRange = explode(',', str_replace(' ', '', $selectionRange));
-        $minifyxFound = in_array((isset($modx->resource)) ? $modx->resource->get('id') : 0, $selectionRange);
-        if (($minifyxFound && ($selectionType == 'exclude')) || (!$minifyxFound && ($selectionType == 'include')) || ($tplOnly && ($this->modx->resource->get('template') == 0))) {
+        $selectionRange = ($selectionRange) ? array_map('trim', explode(',', $selectionRange)) : [];
+        $minifyxFound = in_array((isset($this->modx->resource)) ? $this->modx->resource->get('id') : 0, $selectionRange);
+        if (($minifyxFound && ($selectionType == 'exclude')) || (!$minifyxFound && ($selectionType == 'include')) || ($tplOnly && $this->modx->resource && ($this->modx->resource->get('template') == 0))) {
             return false;
         }
 

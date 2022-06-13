@@ -21,20 +21,26 @@ if ($object->xpdo) {
                 }
                 $content = <<<content
 <?php
+/**
+ * Demo groups file
+ *
+ * @package minifyx
+ * @subpackage groupfile
+ */
 
 return array(
-    /*'baseCss' => [
+    /*'css' => [
       '[[+assets_url]]style1.css',
       '{assets_url}style2.css'
     ],
-    'someJs' => [
+    'js' => [
         ...
     ]*/
 );
 content;
 
                 if (!file_put_contents($file, $content)) {
-                    $this->modx->log(modX::LOG_LEVEL_ERROR, 'Could not create file {core_path}components/minifyx/config/groups.php');
+                    $this->modx->log(xPDO::LOG_LEVEL_ERROR, 'Could not create file {core_path}components/minifyx/config/groups.php');
                     return false;
                 }
             }

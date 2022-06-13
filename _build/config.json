@@ -3,7 +3,7 @@
   "lowCaseName": "minifyx",
   "description": "Combine and minify JS and CSS files",
   "author": "Sergej Shlokov, Thomas Jakobi",
-  "version": "2.0.0",
+  "version": "2.0.0-rc1",
   "package": {
     "elements": {
       "plugins": [
@@ -12,7 +12,6 @@
           "description": "Combine and minify JS and CSS files",
           "file": "minifyx.plugin.php",
           "events": [
-            "OnMODXInit",
             "OnSiteRefresh",
             "OnWebPagePrerender"
           ]
@@ -44,15 +43,27 @@
             },
             {
               "name": "jsFilename",
-              "value": "scripts"
+              "value": ""
+            },
+            {
+              "name": "cssFilename",
+              "value": ""
             },
             {
               "name": "cacheFolder",
               "value": ""
             },
             {
-              "name": "cssFilename",
-              "value": "styles"
+              "name": "cacheUrl",
+              "value": ""
+            },
+            {
+              "name": "jsPlaceholder",
+              "value": "MinifyX.javascript"
+            },
+            {
+              "name": "cssPlaceholder",
+              "value": "MinifyX.css"
             },
             {
               "name": "registerJs",
@@ -60,26 +71,22 @@
               "value": "placeholder",
               "options": [
                 {
-                  "text": "minifyx.properties.placeholder",
+                  "text": "minifyx.minifyx.properties.placeholder",
                   "value": "placeholder"
                 },
                 {
-                  "text": "minifyx.properties.startup",
+                  "text": "minifyx.minifyx.properties.startup",
                   "value": "startup"
                 },
                 {
-                  "text": "minifyx.properties.default",
+                  "text": "minifyx.minifyx.properties.default",
                   "value": "default"
                 },
                 {
-                  "text": "minifyx.properties.print",
+                  "text": "minifyx.minifyx.properties.print",
                   "value": "print"
                 }
               ]
-            },
-            {
-              "name": "jsPlaceholder",
-              "value": "MinifyX.javascript"
             },
             {
               "name": "registerCss",
@@ -87,57 +94,43 @@
               "value": "placeholder",
               "options": [
                 {
-                  "text": "minifyx.properties.placeholder",
+                  "text": "minifyx.minifyx.properties.placeholder",
                   "value": "placeholder"
                 },
                 {
-                  "text": "minifyx.properties.default",
+                  "text": "minifyx.minifyx.properties.default",
                   "value": "default"
                 },
                 {
-                  "text": "minifyx.properties.print",
+                  "text": "minifyx.minifyx.properties.print",
                   "value": "print"
                 }
               ]
             },
             {
-              "name": "cssPlaceholder",
-              "value": "MinifyX.css"
-            },
-            {
-              "name": "jsGroups",
-              "value": ""
-            },
-            {
-              "name": "cssGroups",
-              "value": ""
-            },
-            {
-              "name": "preHooks",
-              "value": ""
-            },
-            {
-              "name": "hooks",
-              "value": ""
-            },
-            {
               "name": "cssTpl",
-              "value": "<link rel=\"stylesheet\" href=\"[[+file]]\" type=\"text/css\" />"
+              "value": ""
             },
             {
               "name": "jsTpl",
-              "value": "<script src=\"[[+file]]\"></script>"
+              "value": ""
             },
             {
               "name": "forceUpdate",
               "type": "combo-boolean",
-              "value": ""
-            },
-            {
-              "name": "version",
-              "value": ""
+              "value": "0"
             }
           ]
+        }
+      ],
+      "chunks": [
+        {
+          "name": "tplMinifyXcss",
+          "file": "css.chunk.html"
+        },
+        {
+          "name": "tplMinifyXjs",
+          "file": "js.chunk.html"
         }
       ]
     },
@@ -149,31 +142,15 @@
         "value": "0"
       },
       {
-        "key": "process_registered",
+        "key": "processRegistered",
         "type": "combo-boolean",
         "area": "system",
         "value": "0"
       },
       {
-        "key": "process_images",
-        "type": "combo-boolean",
+        "key": "excludeRegistered",
         "area": "system",
-        "value": "0"
-      },
-      {
-        "key": "exclude_registered",
-        "area": "system",
-        "value": "#(scripts|styles)_[a-z0-9]{10}\\.#i"
-      },
-      {
-        "key": "exclude_images",
-        "area": "system",
-        "value": "#(thumb|/\\d+x\\d+/)#i"
-      },
-      {
-        "key": "images_filters",
-        "area": "system",
-        "value": "s[true]"
+        "value": "#(scripts|styles)_[a-z0-9]{11}\\.#i"
       },
       {
         "key": "minifyJs",
@@ -188,43 +165,34 @@
         "value": "0"
       },
       {
-        "key": "processRawJs",
-        "type": "combo-boolean",
-        "area": "system",
-        "value": "0"
-      },
-      {
-        "key": "processRawCss",
-        "type": "combo-boolean",
-        "area": "system",
-        "value": "0"
-      },
-      {
         "key": "jsFilename",
         "area": "system",
-        "value": "all"
+        "value": "scripts"
       },
       {
         "key": "cssFilename",
         "area": "system",
-        "value": "all"
+        "value": "styles"
+      },
+      {
+        "key": "jsTpl",
+        "area": "system",
+        "value": "tplMinifyXjs"
+      },
+      {
+        "key": "cssTpl",
+        "area": "system",
+        "value": "tplMinifyXcss"
       },
       {
         "key": "cacheFolder",
         "area": "system",
-        "value": "assets/components/minifyx/cache/"
+        "value": "assets/minifyx/"
       },
       {
-        "key": "forceUpdate",
-        "type": "combo-boolean",
+        "key": "cacheUrl",
         "area": "system",
-        "value": "0"
-      },
-      {
-        "key": "forceDelete",
-        "type": "combo-boolean",
-        "area": "system",
-        "value": "0"
+        "value": "assets/minifyx/"
       },
       {
         "key": "minifyHtml",
@@ -237,7 +205,7 @@
   "dependencies": [
     {
       "name": "php",
-      "version": ">=7.2"
+      "version": ">=7.4"
     },
     {
       "name": "modx",

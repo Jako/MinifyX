@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d4906725e1b6cab7b6e49086b112b509",
+    "content-hash": "f16c60f43725a3d3c2b98251a06dfabf",
     "packages": [
         {
             "name": "assetic/framework",
-            "version": "v3.0.0",
+            "version": "v3.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/assetic-php/assetic.git",
-                "reference": "551514956f2804a53def92d119a76b1e44d86df2"
+                "reference": "f5fd3415fdb0a280b86eb50e2f0ad9754f842706"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/assetic-php/assetic/zipball/551514956f2804a53def92d119a76b1e44d86df2",
-                "reference": "551514956f2804a53def92d119a76b1e44d86df2",
+                "url": "https://api.github.com/repos/assetic-php/assetic/zipball/f5fd3415fdb0a280b86eb50e2f0ad9754f842706",
+                "reference": "f5fd3415fdb0a280b86eb50e2f0ad9754f842706",
                 "shasum": ""
             },
             "require": {
@@ -91,9 +91,9 @@
             ],
             "support": {
                 "issues": "https://github.com/assetic-php/assetic/issues",
-                "source": "https://github.com/assetic-php/assetic/tree/v3.0.0"
+                "source": "https://github.com/assetic-php/assetic/tree/v3.0.1"
             },
-            "time": "2022-02-22T22:12:45+00:00"
+            "time": "2022-05-09T16:39:37+00:00"
         },
         {
             "name": "pear/net_url2",
@@ -209,17 +209,91 @@
             "time": "2020-07-27T03:41:45+00:00"
         },
         {
-            "name": "symfony/deprecation-contracts",
-            "version": "v2.5.0",
+            "name": "scssphp/scssphp",
+            "version": "v1.10.3",
             "source": {
                 "type": "git",
-                "url": "https://github.com/symfony/deprecation-contracts.git",
-                "reference": "6f981ee24cf69ee7ce9736146d1c57c2780598a8"
+                "url": "https://github.com/scssphp/scssphp.git",
+                "reference": "0f1e1516ed2412ad43e42a6a319e77624ba1f713"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/deprecation-contracts/zipball/6f981ee24cf69ee7ce9736146d1c57c2780598a8",
-                "reference": "6f981ee24cf69ee7ce9736146d1c57c2780598a8",
+                "url": "https://api.github.com/repos/scssphp/scssphp/zipball/0f1e1516ed2412ad43e42a6a319e77624ba1f713",
+                "reference": "0f1e1516ed2412ad43e42a6a319e77624ba1f713",
+                "shasum": ""
+            },
+            "require": {
+                "ext-ctype": "*",
+                "ext-json": "*",
+                "php": ">=5.6.0"
+            },
+            "require-dev": {
+                "bamarni/composer-bin-plugin": "^1.4",
+                "phpunit/phpunit": "^5.7 || ^6.5 || ^7.5 || ^8.3 || ^9.4",
+                "sass/sass-spec": "*",
+                "squizlabs/php_codesniffer": "~3.5",
+                "symfony/phpunit-bridge": "^5.1",
+                "thoughtbot/bourbon": "^7.0",
+                "twbs/bootstrap": "~5.0",
+                "twbs/bootstrap4": "4.6.1",
+                "zurb/foundation": "~6.5"
+            },
+            "suggest": {
+                "ext-iconv": "Can be used as fallback when ext-mbstring is not available",
+                "ext-mbstring": "For best performance, mbstring should be installed as it is faster than ext-iconv"
+            },
+            "bin": [
+                "bin/pscss"
+            ],
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "ScssPhp\\ScssPhp\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Anthon Pang",
+                    "email": "apang@softwaredevelopment.ca",
+                    "homepage": "https://github.com/robocoder"
+                },
+                {
+                    "name": "Cédric Morin",
+                    "email": "cedric@yterium.com",
+                    "homepage": "https://github.com/Cerdic"
+                }
+            ],
+            "description": "scssphp is a compiler for SCSS written in PHP.",
+            "homepage": "http://scssphp.github.io/scssphp/",
+            "keywords": [
+                "css",
+                "less",
+                "sass",
+                "scss",
+                "stylesheet"
+            ],
+            "support": {
+                "issues": "https://github.com/scssphp/scssphp/issues",
+                "source": "https://github.com/scssphp/scssphp/tree/v1.10.3"
+            },
+            "time": "2022-05-16T07:22:18+00:00"
+        },
+        {
+            "name": "symfony/deprecation-contracts",
+            "version": "v2.5.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/deprecation-contracts.git",
+                "reference": "e8b495ea28c1d97b5e0c121748d6f9b53d075c66"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/deprecation-contracts/zipball/e8b495ea28c1d97b5e0c121748d6f9b53d075c66",
+                "reference": "e8b495ea28c1d97b5e0c121748d6f9b53d075c66",
                 "shasum": ""
             },
             "require": {
@@ -257,7 +331,7 @@
             "description": "A generic function and convention to trigger deprecation notices",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/deprecation-contracts/tree/v2.5.0"
+                "source": "https://github.com/symfony/deprecation-contracts/tree/v2.5.1"
             },
             "funding": [
                 {
@@ -273,20 +347,20 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-07-12T14:48:14+00:00"
+            "time": "2022-01-02T09:53:40+00:00"
         },
         {
             "name": "symfony/polyfill-php80",
-            "version": "v1.25.0",
+            "version": "v1.26.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-php80.git",
-                "reference": "4407588e0d3f1f52efb65fbe92babe41f37fe50c"
+                "reference": "cfa0ae98841b9e461207c13ab093d76b0fa7bace"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-php80/zipball/4407588e0d3f1f52efb65fbe92babe41f37fe50c",
-                "reference": "4407588e0d3f1f52efb65fbe92babe41f37fe50c",
+                "url": "https://api.github.com/repos/symfony/polyfill-php80/zipball/cfa0ae98841b9e461207c13ab093d76b0fa7bace",
+                "reference": "cfa0ae98841b9e461207c13ab093d76b0fa7bace",
                 "shasum": ""
             },
             "require": {
@@ -295,7 +369,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "1.23-dev"
+                    "dev-main": "1.26-dev"
                 },
                 "thanks": {
                     "name": "symfony/polyfill",
@@ -340,7 +414,7 @@
                 "shim"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-php80/tree/v1.25.0"
+                "source": "https://github.com/symfony/polyfill-php80/tree/v1.26.0"
             },
             "funding": [
                 {
@@ -356,20 +430,20 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-03-04T08:16:47+00:00"
+            "time": "2022-05-10T07:21:04+00:00"
         },
         {
             "name": "symfony/process",
-            "version": "v5.4.7",
+            "version": "v5.4.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
-                "reference": "38a44b2517b470a436e1c944bf9b9ba3961137fb"
+                "reference": "597f3fff8e3e91836bb0bd38f5718b56ddbde2f3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/38a44b2517b470a436e1c944bf9b9ba3961137fb",
-                "reference": "38a44b2517b470a436e1c944bf9b9ba3961137fb",
+                "url": "https://api.github.com/repos/symfony/process/zipball/597f3fff8e3e91836bb0bd38f5718b56ddbde2f3",
+                "reference": "597f3fff8e3e91836bb0bd38f5718b56ddbde2f3",
                 "shasum": ""
             },
             "require": {
@@ -402,7 +476,7 @@
             "description": "Executes commands in sub-processes",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/process/tree/v5.4.7"
+                "source": "https://github.com/symfony/process/tree/v5.4.8"
             },
             "funding": [
                 {
@@ -418,29 +492,100 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-03-18T16:18:52+00:00"
+            "time": "2022-04-08T05:07:18+00:00"
         },
         {
-            "name": "wikimedia/minify",
-            "version": "2.2.6",
+            "name": "wikimedia/less.php",
+            "version": "v3.1.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/wikimedia/minify.git",
-                "reference": "a8e4eb7a7a96b5fe4d64187d0c7390375c0041e4"
+                "url": "https://github.com/wikimedia/less.php.git",
+                "reference": "a486d78b9bd16b72f237fc6093aa56d69ce8bd13"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wikimedia/minify/zipball/a8e4eb7a7a96b5fe4d64187d0c7390375c0041e4",
-                "reference": "a8e4eb7a7a96b5fe4d64187d0c7390375c0041e4",
+                "url": "https://api.github.com/repos/wikimedia/less.php/zipball/a486d78b9bd16b72f237fc6093aa56d69ce8bd13",
+                "reference": "a486d78b9bd16b72f237fc6093aa56d69ce8bd13",
                 "shasum": ""
             },
             "require": {
+                "php": ">=7.2.9"
+            },
+            "require-dev": {
+                "mediawiki/mediawiki-codesniffer": "34.0.0",
+                "mediawiki/minus-x": "1.0.0",
+                "php-parallel-lint/php-console-highlighter": "0.5.0",
+                "php-parallel-lint/php-parallel-lint": "1.2.0",
+                "phpunit/phpunit": "^8.5"
+            },
+            "bin": [
+                "bin/lessc"
+            ],
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Less": "lib/"
+                },
+                "classmap": [
+                    "lessc.inc.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Josh Schmidt",
+                    "homepage": "https://github.com/oyejorge"
+                },
+                {
+                    "name": "Matt Agar",
+                    "homepage": "https://github.com/agar"
+                },
+                {
+                    "name": "Martin Jantošovič",
+                    "homepage": "https://github.com/Mordred"
+                }
+            ],
+            "description": "PHP port of the Javascript version of LESS http://lesscss.org (Originally maintained by Josh Schmidt)",
+            "keywords": [
+                "css",
+                "less",
+                "less.js",
+                "lesscss",
+                "php",
+                "stylesheet"
+            ],
+            "support": {
+                "issues": "https://github.com/wikimedia/less.php/issues",
+                "source": "https://github.com/wikimedia/less.php/tree/v3.1.0"
+            },
+            "time": "2020-12-11T19:33:31+00:00"
+        },
+        {
+            "name": "wikimedia/minify",
+            "version": "2.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/wikimedia/minify.git",
+                "reference": "61b35567bb3fb85c1086f30809cc67d5900c591f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/wikimedia/minify/zipball/61b35567bb3fb85c1086f30809cc67d5900c591f",
+                "reference": "61b35567bb3fb85c1086f30809cc67d5900c591f",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "ext-mbstring": "*",
                 "pear/net_url2": "2.2.2",
                 "php": ">=7.2.9"
             },
             "require-dev": {
                 "mediawiki/mediawiki-codesniffer": "38.0.0",
-                "mediawiki/mediawiki-phan-config": "0.11.0",
+                "mediawiki/mediawiki-phan-config": "0.11.1",
                 "mediawiki/minus-x": "1.1.1",
                 "ockcyp/covers-validator": "1.3.3",
                 "php-parallel-lint/php-console-highlighter": "0.5.0",
@@ -482,9 +627,9 @@
             "description": "Minification of JavaScript code and CSS stylesheets.",
             "homepage": "https://gerrit.wikimedia.org/g/mediawiki/libs/Minify",
             "support": {
-                "source": "https://github.com/wikimedia/minify/tree/2.2.6"
+                "source": "https://github.com/wikimedia/minify/tree/2.3.0"
             },
-            "time": "2021-11-19T18:23:00+00:00"
+            "time": "2022-04-19T20:48:10+00:00"
         }
     ],
     "packages-dev": [],
@@ -494,11 +639,11 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=7.3"
+        "php": ">=7.4"
     },
     "platform-dev": [],
     "platform-overrides": {
-        "php": "7.3"
+        "php": "7.4"
     },
-    "plugin-api-version": "2.2.0"
+    "plugin-api-version": "2.1.0"
 }

@@ -13,7 +13,7 @@ $success = false;
 
 if ($object->xpdo) {
     if (!function_exists('recursiveRemoveFolder')) {
-        function recursiveRemoveFolder($dir)
+        function recursiveRemoveFolder($dir): bool
         {
             $files = array_diff(scandir($dir), ['.', '..']);
             foreach ($files as $file) {

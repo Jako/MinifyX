@@ -7,19 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.0.0] - TBA
 
-### Added
-
 ### Changed
 
 - Use Assetic instead of Munee
-- Minify HTML with 
-
-### Fixed
+- Minify HTML with pfaciana/tiny-html-minifier
 
 ### Removed
 
+- Complete code refactoring removing internal methods and system settings
 - Removed global php method "minify"
 - Removed the ability to use versions for assets
+- Removed "preHooks" and "hooks"
+- Removed image compression with Munee
 
 ## [1.7.1] - 2019-03-25
 

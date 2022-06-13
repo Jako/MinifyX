@@ -20,7 +20,7 @@ abstract class Snippet
      * A reference to the modX instance
      * @var modX $modx
      */
-    protected $modx;
+    protected modX $modx;
 
     /**
      * A reference to the MinifyX instance
@@ -32,13 +32,13 @@ abstract class Snippet
      * The snippet properties
      * @var array $properties
      */
-    protected $properties = [];
+    protected array $properties = [];
 
     /**
      * The optional property prefix for snippet properties
      * @var string $propertyPrefix
      */
-    protected $propertyPrefix = '';
+    protected string $propertyPrefix = '';
 
     /**
      * Creates a new Snippet instance.
@@ -46,7 +46,7 @@ abstract class Snippet
      * @param modX $modx
      * @param array $properties
      */
-    public function __construct(modX $modx, $properties = [])
+    public function __construct(modX $modx, array $properties = [])
     {
         $this->modx =& $modx;
 
@@ -63,7 +63,7 @@ abstract class Snippet
      *
      * @return array
      */
-    public function getDefaultProperties()
+    public function getDefaultProperties(): array
     {
         return [];
     }
@@ -72,7 +72,7 @@ abstract class Snippet
      * @param array $properties
      * @return array
      */
-    public function initProperties(array $properties = [])
+    public function initProperties(array $properties = []): array
     {
         $result = [];
         foreach ($this->getDefaultProperties() as $key => $value) {
@@ -99,7 +99,7 @@ abstract class Snippet
      * @param $value
      * @return int
      */
-    protected function getInt($value)
+    protected function getInt($value): int
     {
         return (int)$value;
     }
@@ -108,7 +108,7 @@ abstract class Snippet
      * @param $value
      * @return bool
      */
-    protected function getBool($value)
+    protected function getBool($value): bool
     {
         return ($value == 1 || $value == '1' || $value == true || $value == 'true');
     }
@@ -117,7 +117,7 @@ abstract class Snippet
      * @param $value
      * @return array|null
      */
-    protected function getAssociativeJson($value)
+    protected function getAssociativeJson($value): ?array
     {
         return json_decode($value, true);
     }
@@ -129,7 +129,7 @@ abstract class Snippet
      * @param string $separator
      * @return array
      */
-    protected function getExplodeSeparated($value, $separator = ',')
+    protected function getExplodeSeparated($value, string $separator = ','): array
     {
         return (is_string($value) && $value !== '') ? array_map('trim', explode($separator, $value)) : [];
     }
@@ -139,7 +139,7 @@ abstract class Snippet
      *
      * @return array
      */
-    public function getProperties()
+    public function getProperties(): array
     {
         return $this->properties;
     }

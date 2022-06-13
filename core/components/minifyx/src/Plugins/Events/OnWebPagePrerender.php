@@ -8,63 +8,55 @@ namespace TreehillStudio\MinifyX\Plugins\Events;
 
 use Assetic\Asset\AssetCollection;
 use Assetic\Asset\FileAsset;
-use Assetic\Filter\CoffeeScriptFilter;
 use Assetic\Filter\JavaScriptMinifierFilter;
 use Assetic\Filter\LessphpFilter;
 use Assetic\Filter\ScssphpFilter;
 use Assetic\Filter\StylesheetMinifyFilter;
 use Exception;
 use Minifier\TinyMinify;
-use modChunk;
 use TreehillStudio\MinifyX\Plugins\Plugin;
 use xPDO;
 
 class OnWebPagePrerender extends Plugin
 {
     /**
-     * @var array[]
-     */
-    private $registeredScripts = [
-        'head' => [],
-        'body' => []
-    ];
-
-    /**
-     * @return false|void
+     * {@inheritDoc}
      */
     public function process()
     {
         $minify = false;
         $time = microtime(true);
 
-        // Process registered scripts and styles
-        if ($this->minifyx->getOption('process_registered', null, false, true)) {
+        // Process registered assets
+        if ($this->minifyx->getOption('processRegistered', [], false)) {
             $this->modx->resource->_output = $this->processRegistered($this->modx->resource->_output);
             $minify = true;
         }
         // Process images
-        if ($this->minifyx->getOption('process_images', null, false, true)) {
-            $this->modx->resource->_output = $this->processImages($this->modx->resource->_output);
-            $minify = true;
+        // @TODO
+        if ($this->minifyx->getOption('processImages', [], false)) {
+            //$this->modx->resource->_output = $this->processImages($this->modx->resource->_output);
+            //$minify = true;
         }
         // Process HTML Minify the page content
-        if ($this->minifyx->getOption('minifyHtml', null, false)) {
+        if ($this->minifyx->getOption('minifyHtml', [], false)) {
             $this->modx->resource->_output = $this->processHtml($this->modx->resource->_output);
             $minify = true;
         }
 
-        if ($minify) {
-            $this->modx->log(xPDO::LOG_LEVEL_INFO, '[MinifyX] Total time for page "' . $this->modx->resource->id . '" = ' . (microtime(true) - $time));
+        if ($this->minifyx->getOption('debug') && $minify) {
+            $this->modx->log(xPDO::LOG_LEVEL_INFO, 'Total time for page "' . $this->modx->resource->id . '" = ' . (microtime(true) - $time), '', $this->minifyx->packageName);
         }
     }
 
     /**
+     * Process the registered assets
+     *
      * @param string $code
      * @return string
      */
-    private function processRegistered($code)
+    private function processRegistered(string $code): string
     {
-        // Get registered scripts
         $clientStartupScripts = $this->modx->getRegisteredClientStartupScripts();
         $clientScripts = $this->modx->getRegisteredClientScripts();
 
@@ -77,70 +69,77 @@ class OnWebPagePrerender extends Plugin
         }
 
         // Any cached minified scripts?
-        $minifiedScripts = $this->modx->cacheManager->get('mfr_' . md5($clientStartupScripts . $clientScripts));
-
-        // If minified scripts are not cached, collect them
-        if (!is_array($minifiedScripts) || empty($minifiedScripts)) {
-            $startupScripts = ($clientStartupScripts) ? explode("\n", $clientStartupScripts) : [];
-            $scripts = ($clientScripts) ? explode("\n", $clientScripts) : [];
+        $cacheManager = $this->modx->getCacheManager();
+        $registeredScripts = $cacheManager->get('minifyx_' . md5($clientStartupScripts . $clientScripts), $this->minifyx->cacheOptions);
+        if (empty($registeredScripts)) {
 
             // Collect the registered scripts
-            $this->collectRegisted($startupScripts, 'head');
-            $this->collectRegisted($scripts, 'body');
-
-            // Prepare the output of the registered blocks
-            $minifiedScripts = [
-                'head' => [],
-                'body' => []
-            ];
-            $minifiedScripts['head'][] = $this->registerBlock($this->registeredScripts['head']['cssexternal'], '<link href="[[+script]]" rel="stylesheet" type="text/css">');
-            $minifiedScripts['head'][] = $this->registerMinBlock($this->registeredScripts['head']['cssmin'], '<link href="[[+minPath]]?f=[[+scripts]]" rel="stylesheet" type="text/css">');
-            $minifiedScripts['head'][] = $this->registerBlock($this->registeredScripts['head']['jsexternal'], '<script src="[[+script]]" type="text/javascript"></script>');
-            $minifiedScripts['head'][] = $this->registerMinBlock($this->registeredScripts['head']['jsmin'], '<script src="[[+minPath]]?f=[[+scripts]]" type="text/javascript"></script>');
-            $minifiedScripts['head'][] = $this->registerBlock($this->registeredScripts['head']['nomin'], '<script src="[[+script]]" type="text/javascript"></script>');
-            $minifiedScripts['head'][] = $this->registerBlock($this->registeredScripts['head']['untouched'], '[[+script]]');
-            $minifiedScripts['body'][] = $this->registerBlock($this->registeredScripts['body']['jsexternal'], '<script src="[[+script]]" type="text/javascript"></script>');
-            $minifiedScripts['body'][] = $this->registerMinBlock($this->registeredScripts['body']['jsmin'], '<script src="[[+minPath]]?f=[[+scripts]]" type="text/javascript"></script>');
-            $minifiedScripts['body'][] = $this->registerBlock($this->registeredScripts['body']['nomin'], '<script src="[[+script]]" type="text/javascript"></script>');
-            $minifiedScripts['body'][] = $this->registerBlock($this->registeredScripts['body']['untouched'], '[[+script]]');
-
-            $minifiedScripts['head'] = array_filter($minifiedScripts['head']);
-            $minifiedScripts['body'] = array_filter($minifiedScripts['body']);
-
-            // Cache the result
-            $this->modx->cacheManager->set('mfr_' . md5($clientStartupScripts . $clientScripts), $minifiedScripts);
+            $registeredHeadScripts = $this->collectRegistered(($clientStartupScripts) ? explode("\n", $clientStartupScripts) : []);
+            $registeredBodyScripts = $this->collectRegistered(($clientScripts) ? explode("\n", $clientScripts) : []);
+            $registeredScripts = $this->prepareRegistered($registeredHeadScripts, $registeredBodyScripts);
+            $cacheManager->set('minifyx_' . md5($clientStartupScripts . $clientScripts), $registeredScripts, 0, $this->minifyx->cacheOptions);
         }
 
         // Insert minified scripts
-        if ($minifiedScripts['head']) {
-            $code = str_replace('</head>', implode("\r\n", $minifiedScripts['head']) . '</head>', $code);
+        if ($registeredScripts['head']) {
+            $code = str_replace('</head>', implode("\r\n", $registeredScripts['head']) . '</head>', $code);
         }
-        if ($minifiedScripts['body']) {
-            $code = str_replace('</body>', implode("\r\n", $minifiedScripts['body']) . '</body>', $code);
+        if ($registeredScripts['body']) {
+            $code = str_replace('</body>', implode("\r\n", $registeredScripts['body']) . '</body>', $code);
         }
         return $code;
     }
 
     /**
-     * Collect the registered scripts into sections
+     * Prepare the output of the registered blocks
+     *
+     * @param array $registeredHeadScripts
+     * @param array $registeredBodyScripts
+     * @return array|array[]
+     */
+    private function prepareRegistered(array $registeredHeadScripts, array $registeredBodyScripts): array
+    {
+        $registeredScripts = [
+            'head' => [],
+            'body' => []
+        ];
+        $registeredScripts['head'][] = $this->registerBlock($registeredHeadScripts['cssexternal'], $this->minifyx->getOption('cssTpl'));
+        $registeredScripts['head'][] = $this->registerMinBlock($registeredHeadScripts['cssmin'], '_h', $this->minifyx->getOption('cssTpl'));
+        $registeredScripts['head'][] = $this->registerBlock($registeredHeadScripts['jsexternal'], $this->minifyx->getOption('jsTpl'));
+        $registeredScripts['head'][] = $this->registerMinBlock($registeredHeadScripts['jsmin'], '_h', $this->minifyx->getOption('jsTpl'));
+        $registeredScripts['head'][] = $this->registerMinBlock($registeredHeadScripts['jsnomin'], '_h', $this->minifyx->getOption('jsTpl'));
+        $registeredScripts['head'][] = $this->registerBlock($registeredHeadScripts['untouched'], '[[+file]]');
+        $registeredScripts['body'][] = $this->registerBlock($registeredBodyScripts['jsexternal'], $this->minifyx->getOption('jsTpl'));
+        $registeredScripts['body'][] = $this->registerMinBlock($registeredBodyScripts['jsmin'], '_b', $this->minifyx->getOption('jsTpl'));
+        $registeredScripts['body'][] = $this->registerMinBlock($registeredBodyScripts['jsnomin'], '_b', $this->minifyx->getOption('jsTpl'));
+        $registeredScripts['body'][] = $this->registerBlock($registeredBodyScripts['untouched'], '[[+file]]');
+
+        $registeredScripts['head'] = array_filter($registeredScripts['head']);
+        $registeredScripts['body'] = array_filter($registeredScripts['body']);
+        return $registeredScripts;
+    }
+
+    /**
+     * Collect and sort the registered asssets into sections
      *
      * @param array $scripts
-     * @param string $section
+     * @return array
      */
-    private function collectRegisted($scripts, $section)
+    private function collectRegistered(array $scripts): array
     {
         $conditional = false;
-        $this->registeredScripts[$section] = [
+        $registeredScripts = [
             'cssexternal' => [],
             'cssmin' => [],
             'jsexternal' => [],
             'jsmin' => [],
+            'jsnomin' => [],
             'untouched' => [],
         ];
         foreach ($scripts as $scriptSrc) {
             if (preg_match('/<!--\[if /', trim($scriptSrc), $tag) || $conditional) {
                 // don't touch conditional css/scripts
-                $this->registeredScripts[$section]['untouched'][] = $scriptSrc;
+                $registeredScripts['untouched'][] = $scriptSrc;
                 $conditional = true;
                 if (preg_match('/endif]-->/', trim($scriptSrc), $tag)) {
                     $conditional = false;
@@ -150,135 +149,149 @@ class OnWebPagePrerender extends Plugin
                 if ($tag && preg_match('/(src|href)=\"(.*?)(\?v=.*?)?"/', $tag[0], $src)) {
                     // if there is a filename referenced in the registered line
                     if (
-                        substr(trim($src[2]), -strlen('js')) == '.js' ||
-                        substr(trim($src[2]), -strlen('js')) == '.coffee'
+                        substr(trim($src[2]), -strlen('.js')) == '.js' ||
+                        substr(trim($src[2]), -strlen('.coffee')) == '.coffee'
                     ) {
                         // the registered chunk is a separate javascript
-                        if (strpos('http', $src[2]) === 0 || strpos('//', $src[2]) === 0) {
+                        if (strpos($src[2], 'http') === 0 || strpos($src[2], '//') === 0) {
                             // do not minify scripts with an external url
-                            $this->registeredScripts[$section]['jsexternal'][] = $src[2];
-                        } elseif (!empty($this->minifyx->getOption('exclude_registered')) && preg_match($this->minifyx->getOption('exclude_registered'), $src[2])) {
-                            // do not minify scripts matched with excludeJs
-                            $this->registeredScripts[$section]['jsnomin'][] = $src[2];
-                        } elseif (strpos($this->minifyx->getOption('cacheFolder'), $src[2]) === 0) {
-                            // do not minify scripts in the MinifyX cache folder (added by the MinifyX script)
-                            $this->registeredScripts[$section]['jsnomin'][] = $src[2];
+                            $registeredScripts['jsexternal'][] = $src[2];
+                        } elseif (!empty($this->minifyx->getOption('excludeRegistered')) && preg_match($this->minifyx->getOption('excludeRegistered'), $src[2])) {
+                            // do not minify scripts matched with excludeRegistered
+                            $registeredScripts['jsnomin'][] = $src[2];
+                        } elseif (strpos($src[2], $this->minifyx->getOption('cachePath')) === 0) {
+                            // do not minify scripts in the MinifyX cache folder (i.e. added by the MinifyX script)
+                            $registeredScripts['jsnomin'][] = $src[2];
                         } else {
                             // minify scripts
-                            $this->registeredScripts[$section]['jsmin'][] = $src[2];
+                            $registeredScripts['jsmin'][] = $src[2];
                         }
                     } elseif (
                         substr(trim($src[2]), -strlen('.css')) == '.css' ||
                         substr(trim($src[2]), -strlen('.scss')) == '.scss' ||
                         substr(trim($src[2]), -strlen('.less')) == '.less'
                     ) {
-                        if (strpos('http', $src[2]) === 0 || strpos('//', $src[2]) === 0) {
+                        if (strpos($src[2], 'http') === 0 || strpos($src[2], '//') === 0) {
                             // do not minify css with an external url
-                            $this->registeredScripts[$section]['cssexternal'][] = $src[2];
-                        } elseif (strpos($this->minifyx->getOption('cacheFolder'), $src[2]) === 0) {
+                            $registeredScripts['cssexternal'][] = $src[2];
+                        } elseif (strpos($src[2], $this->minifyx->getOption('cachePath')) === 0) {
                             // do not minify css in the MinifyX cache folder (added by the MinifyX script)
-                            $this->registeredScripts[$section]['cssnomin'][] = $src[2];
+                            $registeredScripts['cssnomin'][] = $src[2];
                         } else {
                             // minify css
-                            $this->registeredScripts[$section]['cssmin'][] = $src[2];
+                            $registeredScripts['cssmin'][] = $src[2];
                         }
                     } else {
                         // do not minify any other file
-                        $this->registeredScripts[$section]['untouched'][] = $scriptSrc;
+                        $registeredScripts['untouched'][] = $scriptSrc;
                     }
                 } else {
                     // if there is no filename referenced in the registered line leave it alone
-                    $this->registeredScripts[$section]['untouched'][] = $scriptSrc;
+                    $registeredScripts['untouched'][] = $scriptSrc;
                 }
             }
         }
-        foreach ($this->registeredScripts[$section] as &$scriptSection) {
+        foreach ($registeredScripts as &$scriptSection) {
             $scriptSection = array_unique($scriptSection);
         }
+        return $registeredScripts;
     }
 
     /**
+     * Register not handled assets
+     *
      * @param array $scripts
      * @param string $template
      * @return string
      */
-    private function registerBlock($scripts, $template)
+    private function registerBlock(array $scripts, string $template): string
     {
         $block = [];
         foreach ($scripts as $script) {
-            /** @var modChunk $chunk */
-            $chunk = $this->modx->newObject('modChunk', array('name' => 'block' . uniqid()));
-            $chunk->setCacheable(false);
-            $block[] = $chunk->process([
-                'script' => $script,
-            ], $template);
+            $block[] = $this->modx->getChunk($template, [
+                'file' => $script,
+            ]);
             break;
         }
         return implode("\r\n", $block);
     }
 
     /**
+     * Register combined (and optional minify) assets
+     *
      * @param array $scripts
+     * @param string $prefix
      * @param string $template
      * @return string
      */
-    private function registerMinBlock($scripts, $template)
+    private function registerMinBlock(array $scripts, string $prefix, string $template): string
     {
         if ($scripts) {
             try {
-                $collection = new AssetCollection();
+                $assetCollection = new AssetCollection();
+
+                // Collect the assets ...
+                $webrootPath = substr($this->modx->getOption('base_path'), 0, -strlen($this->modx->getOption('base_url'))) . '/';
+                $type = 'css';
                 foreach ($scripts as $file) {
-                    $file = MODX_BASE_PATH . ltrim($file, '/');
+                    $file = $webrootPath . ltrim($file, '/');
                     $extension = pathinfo($file, PATHINFO_EXTENSION);
                     switch ($extension) {
                         case 'js':
-                        case 'css':
-                            $collection->add(new FileAsset($file));
+                            $assetCollection->add(new FileAsset($file));
+                            $type = 'js';
                             break;
-                        case 'coffee':
-                            $collection->add(new FileAsset($file, array(new CoffeeScriptFilter())));
+                        case 'css':
+                            $assetCollection->add(new FileAsset($file));
                             break;
                         case 'scss':
-                            $collection->add(new FileAsset($file, array(new ScssphpFilter())));
+                            $assetCollection->add(new FileAsset($file, array(new ScssphpFilter())));
                             break;
                         case 'less':
-                            $collection->add(new FileAsset($file, array(new LessphpFilter())));
+                            $assetCollection->add(new FileAsset($file, array(new LessphpFilter())));
                             break;
                     }
                 }
 
-                    if ($type === 'js') {
-                        return $collection->dump(new JavaScriptMinifierFilter());
-                    } elseif ($type === 'css') {
-                        return $collection->dump(new StylesheetMinifyFilter());
+                // ... and combine them in one file
+                if ($this->minifyx->getOption('minify' . ucfirst($type))) {
+                    if ($type == 'js') {
+                        $content = $assetCollection->dump(new JavaScriptMinifierFilter());
+                    } else {
+                        $content = $assetCollection->dump(new StylesheetMinifyFilter());
                     }
-
+                } else {
+                    $content = $assetCollection->dump();
+                }
+                if ($content) {
+                    $file = $this->minifyx->saveAssetFile($content, $type, $prefix);
+                    return $this->modx->getChunk($template, [
+                        'file' => $file
+                    ]);
+                }
             } catch (Exception $e) {
                 $this->modx->log(xPDO::LOG_LEVEL_ERROR, $e->getMessage());
-                return '';
             }
-            /** @var modChunk $chunk */
-            $chunk = $this->modx->newObject('modChunk', array('name' => 'block' . uniqid()));
-            $chunk->setCacheable(false);
-            return $chunk->process([
-                'scripts' => implode(',', $scripts),
-            ], $template);
-        } else {
-            return '';
         }
+        return '';
     }
 
     /**
+     * Minify images
+     *
      * @param string $code
+     * @return string
+     *
+     * @TODO switch from Munee to Assetic
      */
-    private function processImages($code)
+    private function processImages(string $code)
     {
         if (!$this->modx->getService('minifyx', 'MinifyX', MODX_CORE_PATH . 'components/minifyx/model/minifyx/')) {
             return false;
         }
 
         $connector = $this->modx->getOption('minifyx.connector', null, '/assets/components/minifyx/munee.php', true);
-        $exclude = $this->modx->getOption('minifyx.exclude_images');
+        $exclude = $this->modx->getOption('minifyx.excludeImages');
         $replace = ['from' => [], 'to' => []];
         $site_url = $this->modx->getOption('site_url');
         $default = $this->modx->getOption('minifyx.images_filters', null, '', true);
@@ -346,7 +359,7 @@ class OnWebPagePrerender extends Plugin
      * @param string $code
      * @return string
      */
-    private function processHtml($code)
+    private function processHtml(string $code): string
     {
         return TinyMinify::html($code);
     }

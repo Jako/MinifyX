@@ -1,9 +1,11 @@
 <?php
 /**
- * minifyx
+ * MinifyX
  *
- * Copyright 2008-2011 by Florian Wobbe - www.eprofs.de
- * Copyright 2011-2022 by Thomas Jakobi <office@treehillstudio.com>
+ * Copyright 2012 by Patrick Nijkamp - https://github.com/b03tz
+ * Copyright 2012-2018 by Vasily Naumkin - https://github.com/bezumkin
+ * Copyright 2018-2021 by Sergey Shlokov - https://github.com/sergant210
+ * Copyright 2021-2022 by Thomas Jakobi <office@treehillstudio.com>
  *
  * @package minifyx
  * @subpackage classfile
@@ -13,7 +15,6 @@ namespace TreehillStudio\MinifyX;
 
 use Assetic\Asset\AssetCollection;
 use Assetic\Asset\FileAsset;
-use Assetic\Filter\CoffeeScriptFilter;
 use Assetic\Filter\JavaScriptMinifierFilter;
 use Assetic\Filter\LessphpFilter;
 use Assetic\Filter\ScssphpFilter;
@@ -32,70 +33,48 @@ class MinifyX
      * A reference to the modX instance
      * @var modX $modx
      */
-    public $modx;
+    public modX $modx;
 
     /**
      * The namespace
      * @var string $namespace
      */
-    public $namespace = 'minifyx';
+    public string $namespace = 'minifyx';
 
     /**
      * The package name
      * @var string $packageName
      */
-    public $packageName = 'MinifyX';
+    public string $packageName = 'MinifyX';
 
     /**
      * The version
      * @var string $version
      */
-    public $version = '2.0.0';
+    public string $version = '2.0.0-rc1';
 
     /**
      * The class options
      * @var array $options
      */
-    public $options = [];
+    public array $options = [];
+
+    /**
+     * The class cache options
+     * @var array $cacheOptions
+     */
+    public array $cacheOptions;
 
     /**
      * @var array
      */
-    public $groups = array();
-
-    /**
-     * @var array
-     */
-    protected $sources;
+    protected array $sources;
 
     /**
      * Content of the current processed file
      * @var string
      */
-    protected $_content;
-
-    /**
-     * Name of the current processed file
-     * @var string
-     */
-    protected $_filename;
-
-    /**
-     * Type of the processed files
-     * @var string
-     */
-    protected $_filetype;
-
-    /**
-     * List of all cached files
-     * @var array $cachedFiles
-     */
-    protected $cachedFiles = array();
-
-    /**
-     * @var array $parameters
-     */
-    protected $parameters = array('jsGroups', 'cssGroups', 'jsSources', 'cssSources', 'hooks', 'preHooks');
+    protected string $_content;
 
     /**
      * MinifyX constructor
@@ -103,10 +82,11 @@ class MinifyX
      * @param modX $modx A reference to the modX instance.
      * @param array $options An array of options. Optional.
      */
-    public function __construct(modX &$modx, $options = [])
+    public function __construct(modX &$modx, array $options = [])
     {
         $this->modx =& $modx;
         $this->namespace = $this->getOption('namespace', $options, $this->namespace);
+        $this->packageName = $this->modx->lexicon('minifyx');
 
         $corePath = $this->getOption('core_path', $options, $this->modx->getOption('core_path', null, MODX_CORE_PATH) . 'components/' . $this->namespace . '/');
         $assetsPath = $this->getOption('assets_path', $options, $this->modx->getOption('assets_path', null, MODX_ASSETS_PATH) . 'components/' . $this->namespace . '/');
@@ -137,45 +117,22 @@ class MinifyX
         // Add default options
         $this->options = array_merge($this->options, [
             'debug' => (bool)$this->modx->getOption($this->namespace . '.debug', null, '0') == 1,
-            'cacheFolder' => $this->modx->getOption($this->namespace . '.cacheFolder', null, $assetsPath . 'cache/', true),
-            'cacheUrl' => $this->modx->getOption($this->namespace . '.cacheFolder', null, $assetsUrl . 'cache/', true),
-            'jsGroups' => '',
-            'cssGroups' => '',
-            'jsSources' => '',
-            'cssSources' => '',
-            'cssFilename' => 'styles',
-            'jsFilename' => 'scripts',
-            'minifyJs' => (bool)$this->getOption('minifyJs', $options, false),
-            'minifyCss' => (bool)$this->getOption('minifyCss', $options, false),
-            'registerCss' => 'default',
-            'registerJs' => 'default',
-            'jsPlaceholder' => 'MinifyX.javascript',
-            'cssPlaceholder' => 'MinifyX.css',
-            'forceUpdate' => $this->modx->context->key == 'mgr',
-            'forceDelete' => $this->modx->getOption($this->namespace . '.forceDelete', null, false),
-            'munee_cache' => MODX_CORE_PATH . 'cache/default/munee/',
-            'hash_length' => 10,
-            'hooksPath' => MODX_CORE_PATH . 'components/minifyx/hooks/',
-            'hooks' => '',
-            'preHooks' => '',
-            'jsTpl' => '<script src="[[+file]]"></script>',
-            'cssTpl' => '<link rel="stylesheet" href="[[+file]]" type="text/css">',
-            'version' => '',
-            'jsExt' => $this->modx->getOption($this->namespace . '.minifyJs', $options, false) ? '.min.js' : '.js',
-            'cssExt' => $this->modx->getOption($this->namespace . '.minifyCss', $options, false) ? '.min.css' : '.css',
+            'cachePath' => $this->modx->getOption($this->namespace . '.cachePath', null, MODX_ASSETS_PATH . 'minifyx/', true),
+            'cacheUrl' => $this->modx->getOption($this->namespace . '.cacheUrl', null, MODX_ASSETS_URL . 'minifyx/', true),
+            'cssFilename' => $this->modx->getOption($this->namespace . '.cssFilename', $options, 'styles', true),
+            'jsFilename' => $this->modx->getOption($this->namespace . '.jsFilename', $options, 'scripts', true),
+            'jsTpl' => $this->modx->getOption($this->namespace . '.jsTpl', $options, 'tplMinifyXjs', true),
+            'cssTpl' => $this->modx->getOption($this->namespace . '.cssTpl', $options, 'tplMinifyXcss', true),
+            'jsExt' => $this->modx->getOption($this->namespace . '.minifyJs', $options, false, true) ? '.min.js' : '.js',
+            'cssExt' => $this->modx->getOption($this->namespace . '.minifyCss', $options, false, true) ? '.min.css' : '.css',
+            'minifyJs' => (bool)$this->modx->getOption($this->namespace . '.minifyJs', $options, false, true),
+            'minifyCss' => (bool)$this->modx->getOption($this->namespace . '.minifyCss', $options, false, true),
+            'hashLength' => (int)$this->modx->getOption($this->namespace . '.hashLength', $options, 10, true),
         ]);
 
-        $test = $this->modx->getOption($this->namespace . '.cacheFolder', null, $assetsPath . 'cache/', true);
-
-        $this->processParams();
-        if (file_exists(MODX_CORE_PATH . 'components/minifyx/config/groups.php')) {
-            $this->groups = include MODX_CORE_PATH . 'components/minifyx/config/groups.php';
-        }
-        if ($this->prepareCacheFolder()) {
-            $this->cachedFiles = $this->getCachedFiles();
-        } else {
-            $this->modx->log(xPDO::LOG_LEVEL_ERROR, '[MinifyX] Could not create cache dir "' . $this->getOption('cacheFolderPath') . '"');
-        }
+        $this->cacheOptions = [
+            xPDO::OPT_CACHE_KEY => $this->namespace,
+        ];
 
         $lexicon = $this->modx->getService('lexicon', 'modLexicon');
         $lexicon->load($this->namespace . ':default');
@@ -190,7 +147,7 @@ class MinifyX
      * namespaced system setting; by default this value is null.
      * @return mixed The option value or the default value specified.
      */
-    public function getOption($key, $options = [], $default = null)
+    public function getOption(string $key, array $options = [], $default = null)
     {
         $option = $default;
         if (!empty($key) && is_string($key)) {
@@ -206,510 +163,40 @@ class MinifyX
     }
 
     /**
-     * Set a local configuration option.
-     *
-     * @param string $key The option key to search for.
-     * @param mixed $value The option value.
-     */
-    public function setOption($key, $value)
-    {
-        $this->options[$key] = $value;
-    }
-
-    /**
-     * Explode snippet parameters to an array
-     */
-    protected function processParams()
-    {
-        foreach ($this->parameters as $source) {
-            $this->setOption($source, $this->explodeParam($this->getOption($source)));
-        }
-    }
-
-    /**
-     * Explode a comma separated string parameter to an array.
-     *
-     * @param $param
-     * @return array
-     */
-    protected function explodeParam($param)
-    {
-        if (is_string($param)) {
-            $param = (!empty($param)) ? array_map('trim', explode(',', $param)) : array();
-        }
-        return $param;
-    }
-
-    /**
-     * Checks and creates cache dir for storing prepared scripts and styles
+     * Checks and creates cache folder for storing prepared scripts and styles
      *
      * @return bool
      */
-    public function prepareCacheFolder()
+    public function prepareCacheFolder(): bool
     {
         $success = true;
-        $path = trim($this->getOption('cacheFolder'));
-        if (strpos(MODX_BASE_PATH, $path) === 0) {
+
+        // Optionally prepend cache path with MODX base path.
+        $path = trim($this->getOption('cachePath'));
+        if (strpos($path, MODX_BASE_PATH) === 0) {
             $path = substr($path, strlen(MODX_BASE_PATH));
         }
-        $path = rtrim($path, '/') . '/';
-        if (!file_exists(MODX_BASE_PATH . $path)) {
+        $path = MODX_BASE_PATH . rtrim($path, '/') . '/';
+        $this->options['cachePath'] = $path;
+
+        if (!file_exists($path)) {
             $cacheManager = $this->modx->getCacheManager();
-            $success = $cacheManager->writeTree(MODX_BASE_PATH . $path);
+            $success = $cacheManager->writeTree($path);
+            $success &= $cacheManager->writeTree($path . '/js/');
+            $success &= $cacheManager->writeTree($path . '/css/');
         }
-        $this->setOption('cacheFolderPath', MODX_BASE_PATH . $path);
         return $success;
     }
 
     /**
-     * Recursive create of directories by specified path
-     *
-     * @param string path
-     *
-     * @return bool
-     */
-    public function makeDir($path = '')
-    {
-        if (empty($path)) {
-            return false;
-        } elseif (file_exists($path)) {
-            return true;
-        }
-
-        $base = (strpos($path, MODX_CORE_PATH) === 0) ? MODX_CORE_PATH : MODX_BASE_PATH;
-        $tmp = explode('/', str_replace($base, '', $path));
-        $path = $base;
-        foreach ($tmp as $v) {
-            if (!empty($v)) {
-                $path .= $v . '/';
-                if (!file_exists($path)) {
-                    mkdir($path);
-                }
-            }
-        }
-        return file_exists($path);
-    }
-
-    /**
-     * Get the latest cached files for current options
-     *
-     * @param string $prefix
-     * @param string $extension
-     *
-     * @return array
-     */
-    public function getCachedFiles($prefix = '', $extension = '')
-    {
-        $cached = array();
-        $regexp = $prefix . '[a-z0-9]{' . $this->getOption('hash_length') . '}.*';
-        if (!empty($extension)) {
-            $regexp .= '?' . str_replace('.', '\.', $extension);
-        }
-        $files = scandir($this->getOption('cacheFolderPath'));
-        foreach ($files as $file) {
-            if (preg_match("/$regexp/i", $file, $matches)) {
-                $cached[] = $file;
-            }
-        }
-        return $cached;
-    }
-
-    /**
-     * Reset the config and prepare an optional config array
-     *
-     * @param array $config
-     */
-    public function reset(array $config = array())
-    {
-        $this->_filename = $this->_content = '';
-        foreach ($this->parameters as $source) {
-            $this->setOption($source, '');
-        }
-        $this->setConfig($config);
-        $this->processParams();
-    }
-
-    /**
-     * Set new config.
-     *
-     * @param array $config
-     */
-    public function setConfig(array $config = array())
-    {
-        $this->options = (is_array($config) && !empty($config)) ? array_merge($this->options, $config) : $this->options;
-    }
-
-    /**
-     * Get a specified group.
-     *
-     * @param string $group
-     * @return array
-     */
-    public function getGroup($group)
-    {
-        return $this->groups[$group] ?? array();
-    }
-
-    /**
-     * Add a group or groups of files.
-     *
-     * @param string $type
-     * @param mixed $group
-     */
-    public function addGroups($type, $group)
-    {
-        if (!empty($group)) {
-            if (!is_array($group)) {
-                $group = $this->explodeParam($group);
-            }
-            $this->setOption($type, array_merge($this->getOption($type), $group));
-        }
-    }
-
-    /**
-     * Get the stored groups of files.
-     *
-     * @param string $type
-     * @param string $group
-     * @return mixed
-     */
-    public function getGroups($type, $group = '')
-    {
-        return (!empty($group)) ? $this->getOption($type)[$group] : $this->getOption($type);
-    }
-
-    /**
-     * Replace the stored groups of files with new ones.
-     *
-     * @param string $type
-     * @param mixed $group
-     */
-    public function setGroups($type, $group)
-    {
-        if (!is_array($group)) {
-            $group = $this->explodeParam($group);
-        }
-        $this->setOption($type, $group);
-    }
-
-    /**
-     * Add a group or groups of javascript files.
-     *
-     * @param $group
-     */
-    public function addJsGroup($group)
-    {
-        $this->addGroups('jsGroups', $group);
-    }
-
-    /**
-     * Get the stored groups of javascript files.
-     *
-     * @param string $group
-     * @return mixed
-     */
-    public function getJsGroup($group = '')
-    {
-        return $this->getGroups('jsGroups', $group);
-    }
-
-    /**
-     * Replace the stored groups of javascript files with new ones.
-     *
-     * @param $group
-     */
-    public function setJsGroup($group)
-    {
-        $this->setGroups('jsGroups', $group);
-    }
-
-    /**
-     * Add a group or groups of stylesheet files.
-     *
-     * @param $group
-     */
-    public function addCssGroup($group)
-    {
-        $this->addGroups('cssGroups', $group);
-    }
-
-    /**
-     * Get the stored groups of stylesheet files.
-     *
-     * @param null $group
-     * @return mixed
-     */
-    public function getCssGroup($group = null)
-    {
-        return $this->getGroups('cssGroups', $group);
-    }
-
-    /**
-     * Replace the stored groups of stylesheet files with new ones.
-     *
-     * @param $group
-     */
-    public function setCssGroup($group)
-    {
-        $this->setGroups('cssGroups', $group);
-    }
-
-    /**
-     * Add javascript sources.
-     *
-     * @param $source
-     */
-    public function addJsSource($source)
-    {
-        $this->addGroups('jsSources', $source);
-    }
-
-    /**
-     * Get the stored sources of javascript files.
-     *
-     * @param $source
-     * @return mixed
-     */
-    public function getJsSource($source)
-    {
-        return $this->getGroups('jsSources', $source);
-    }
-
-    /**
-     * Replace the stored sources of javascript files with new ones.
-     *
-     * @param $source
-     */
-    public function setJsSource($source)
-    {
-        $this->setGroups('jsSources', $source);
-    }
-
-    /**
-     * Add stylesheet sources.
-     *
-     * @param $source
-     */
-    public function addCssSource($source)
-    {
-        $this->addGroups('cssSources', $source);
-    }
-
-    /**
-     * Get the stored sources of stylesheet files.
-     *
-     * @param $source
-     * @return mixed
-     */
-    public function getCssSource($source)
-    {
-        return $this->getGroups('cssSources', $source);
-    }
-
-    /**
-     * Replace the stored sources of stylesheet files with new ones.
-     *
-     * @param $source
-     */
-    public function setCssSource($source)
-    {
-        $this->setGroups('cssSources', $source);
-    }
-
-    /**
-     * Check if the process file is javascript file.
-     *
-     * @param string $file
-     * @return bool
-     */
-    public function isJs($file = null)
-    {
-        $file = $file ?: $this->_filename;
-        return isset($file) ? pathinfo($file, PATHINFO_EXTENSION) == 'js' : false;
-    }
-
-    /**
-     * Check if the process file is stylesheet file.
-     *
-     * @param string $file
-     * @return bool
-     */
-    public function isCss($file = null)
-    {
-        $file = $file ?: $this->_filename;
-        return isset($file) ? pathinfo($file, PATHINFO_EXTENSION) == 'css' : false;
-    }
-
-    /**
-     * Removes cache files
-     *
-     * @return bool
-     */
-    public function clearCache()
-    {
-        if ($this->prepareCacheFolder()) {
-            if ($this->getOption('forceDelete')) {
-                foreach (new DirectoryIterator($this->getOption('cacheFolderPath')) as $file) {
-                    if ($file->isFile()) {
-                        unlink($file->getPathname());
-                    }
-                }
-            } else {
-                foreach ($this->cachedFiles as $file) {
-                    unlink($this->getOption('cacheFolderPath') . $file);
-                }
-            }
-            $this->cachedFiles = array();
-        }
-        if ($dir = $this->getTmpDir()) {
-            return $this->removeDir($dir);
-        }
-        return false;
-    }
-
-    /**
-     * Prepares and returns path to temporary directory for storing Munee cache
-     *
-     * @return bool
-     */
-    public function getTmpDir()
-    {
-        $dir = str_replace('//', '/', $this->getOption('munee_cache'));
-        if ($this->makeDir($dir)) {
-            return $dir;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * Recursive remove of a directory
-     *
-     * @param string $dir
-     *
-     * @return bool
-     */
-    public function removeDir($dir)
-    {
-        $dir = rtrim($dir, '/');
-        if (is_dir($dir)) {
-            $list = scandir($dir);
-            foreach ($list as $file) {
-                if ($file[0] == '.') {
-                    continue;
-                } elseif (is_dir($dir . '/' . $file)) {
-                    $this->removeDir($dir . '/' . $file);
-                } else {
-                    @unlink($dir . '/' . $file);
-                }
-            }
-        }
-        @rmdir($dir);
-        return !file_exists($dir);
-    }
-
-    /**
-     * Activate/Deactivate minify
-     *
-     * @param bool $value
-     * @return $this
-     */
-    public function minify($value = true)
-    {
-        $this->setOption('minifyJs', (bool)$value);
-        $this->setOption('minifyCss', (bool)$value);
-        return $this;
-    }
-
-    /**
-     * @param string $path
-     * @return $this
-     */
-    public function cacheFolder($path)
-    {
-        if (!empty($path)) {
-            $this->setOption('cacheFolder', $path);
-            if (!$this->prepareCacheFolder()) {
-                $this->modx->log(1, 'Can\'t create the cache folder "' . $this->getOption('cacheFolderPath') . '"!');
-            };
-        }
-        return $this;
-    }
-
-    /**
-     * @param $key
-     * @param $parameters
-     * @return $this
-     */
-    public function __call($key, $parameters)
-    {
-        if (isset($this->config[$key])) {
-            $this->config[$key] = (in_array($key, $this->parameters)) ? $this->explodeParam($parameters[0]) : $parameters[0];
-        }
-        return $this;
-    }
-
-//    /**
-//     * @return array|string|string[]
-//     */
-//    public function __toString()
-//    {
-//        return $this->run();
-//    }
-//
-
-    /**
-     * Prepare an array of css and js files.
-     * @return array
-     */
-    public function prepareSources()
-    {
-        $js = $css = array();
-        $this->processHooks($this->getOption('preHooks'));
-        foreach ($this->getOption('jsGroups') as $group) {
-            if (isset($this->groups[$group])) {
-                $js = array_merge($js, $this->groups[$group]);
-            }
-        }
-        foreach ($this->getOption('cssGroups') as $group) {
-            if (isset($this->groups[$group])) {
-                $css = array_merge($css, $this->groups[$group]);
-            }
-        }
-        $js = array_unique(array_merge($js, $this->getOption('jsSources')));
-        $css = array_unique(array_merge($css, $this->getOption('cssSources')));
-        $js = array_map(array($this, 'parseUrl'), $js);
-        $css = array_map(array($this, 'parseUrl'), $css);
-        return $this->sources = compact('js', 'css');
-    }
-
-    /**
-     * Process specified hooks.
-     * @param $hooks
-     */
-    protected function processHooks($hooks)
-    {
-        foreach ($hooks as $hook) {
-            $modx = $this->modx;
-            if (preg_match('#\.php$#', $hook)) {
-                $MinifyX = $this;
-                if (file_exists($this->getOption('hooksPath') . $hook)) {
-                    include $this->getOption('hooksPath') . $hook;
-                }
-            } else {
-                $modx->runSnippet($hook, array('MinifyX' => $this));
-            }
-        }
-    }
-
-    /**
-     * Prepare string or array of files for Munee.
+     * Prepare comma separated string or array of files.
      *
      * @param array|string $files
      * @param string $type Type of files
+     * @param string $position The register position of files
      * @return array
      */
-    public function prepareFiles($files, $type = '')
+    public function prepareFiles($files, string $type = '', string $position = ''): array
     {
         if (is_string($files)) {
             $files = array_map('trim', explode(',', $files));
@@ -717,15 +204,26 @@ class MinifyX
         if (!is_array($files)) {
             return [];
         }
-        $site_url = $this->modx->getOption('site_url');
-        $this->_filetype = $type;
+        $siteUrl = $this->modx->getOption('site_url');
         $output = array();
         foreach ($files as $file) {
-            if (!empty($file) && $file[0] !== '-') {
+            if (!empty($file) && substr($file, 0, 1) !== '-') {
                 $file = (strpos($file, MODX_BASE_PATH) === 0) ? substr($file, strlen(MODX_BASE_PATH)) : $file;
-                $file = (strpos($file, $site_url) === 0) ? substr($file, strlen($site_url)) : $file;
+                $file = (strpos($file, $siteUrl) === 0) ? substr($file, strlen($siteUrl)) : $file;
                 if (preg_match('#https?://#', $file)) {
-                    $this->modx->log(xPDO::LOG_LEVEL_ERROR, 'Can\'t handle the external asset URL ' . $file);
+                    // Handle external assets
+                    if ($type == 'css') {
+                        $this->modx->regClientCSS($file);
+                    } else {
+                        if ($position == 'startup') {
+                            $this->modx->regClientStartupScript($file);
+                        } else {
+                            $this->modx->regClientScript($file);
+                        }
+                    }
+                    if ($this->getOption('debug')) {
+                        $this->modx->log(xPDO::LOG_LEVEL_ERROR, 'Can\'t handle the external asset URL ' . $file, '', $this->packageName);
+                    }
                     continue;
                 }
                 if (strpos($file, '/') !== 0) {
@@ -742,17 +240,15 @@ class MinifyX
     public function getAssetCollection($type, $files, $minify): string
     {
         try {
+            $webrootPath = substr($this->modx->getOption('base_path'), 0, -strlen($this->modx->getOption('base_url'))) . '/';
             $collection = new AssetCollection();
             foreach ($files as $file) {
-                $file = MODX_BASE_PATH . ltrim($file, '/');
+                $file = $webrootPath . ltrim($file, '/');
                 $extension = pathinfo($file, PATHINFO_EXTENSION);
                 switch ($extension) {
                     case 'js':
                     case 'css':
                         $collection->add(new FileAsset($file));
-                        break;
-                    case 'coffee':
-                        $collection->add(new FileAsset($file, array(new CoffeeScriptFilter())));
                         break;
                     case 'scss':
                         $collection->add(new FileAsset($file, array(new ScssphpFilter())));
@@ -771,136 +267,59 @@ class MinifyX
             }
             return $collection->dump();
         } catch (Exception $e) {
-            $this->modx->log(xPDO::LOG_LEVEL_ERROR, $e->getMessage());
+            $this->modx->log(xPDO::LOG_LEVEL_ERROR, $e->getMessage(), '', $this->packageName);
             return '';
         }
 
     }
 
     /**
-     * Save data in cache file
-     *
-     * @param $data
-     *
-     * @return bool|string
-     */
-    public function saveFile($data)
-    {
-        $filename = $this->getOption($this->_filetype . 'Filename');
-        if (pathinfo($filename, PATHINFO_EXTENSION) == $this->_filetype) {
-            $this->_filename = $filename;
-            if (file_exists($this->getFilePath())) {
-                $this->cachedFiles[] = $this->_filename;
-            }
-        } else {
-            $extension = $this->getOption($this->_filetype . 'Ext');
-            $hash = substr(hash('sha1', $this->getContent()), 0, $this->getOption('hash_length'));
-            $this->_filename = $filename . '_' . $hash . $extension;
-        }
-        $this->setContent($data);
-        $this->processHooks($this->getOption('hooks'));
-        if (empty($this->_filename)) {
-            return false;
-        }
-        $tmp = array_flip($this->cachedFiles);
-        if (!isset($tmp[$this->_filename]) || $this->getOption('forceUpdate')) {
-            if (!file_put_contents($this->getFilePath(), $this->getContent())) {
-                $this->modx->log(xPDO::LOG_LEVEL_ERROR, '[MinifyX] Could not save cache file ' . $this->getOption('cacheFolderPath') . $this->_filename);
-                return false;
-            }
-            if (!isset($tmp[$this->_filename])) {
-                $this->cachedFiles[] = $this->_filename;
-            }
-        }
-        return file_exists($this->getFilePath());
-    }
-
-    /**
-     * Get path of the cache file.
-     *
-     * @param string $file
-     * @return string
-     */
-    public function getFilePath($file = null)
-    {
-        if (is_null($file)) {
-            $file = $this->getFilename();
-        }
-        return $this->getOption('cacheFolderPath') . $file;
-    }
-
-    /**
-     * Get filename of the processed file.
-     *
-     * @return string
-     */
-    public function getFilename()
-    {
-        return $this->_filename;
-    }
-
-    /**
-     * Set a filename for the processed file.
-     * @param string $name
-     * @return string
-     */
-    public function setFilename($name)
-    {
-        return $this->_filename = $name;
-    }
-
-    /**
-     * Get content of the processed file.
-     * @return string
-     */
-    public function getContent()
-    {
-        return $this->_content;
-    }
-
-    /**
-     * Set new content.
      * @param string $content
+     * @param string $type
+     * @param string $hashPrefix
      * @return string
+     * @throws Exception
      */
-    public function setContent($content)
+    public function saveAssetFile(string $content, string $type, string $hashPrefix): string
     {
-        return $this->_content = $content;
-    }
+        $filename = $this->getOption($type . 'Filename') . $hashPrefix;
+        $extension = $this->getOption($type . 'Ext');
+        $hash = substr(hash('sha1', $content), 0, $this->getOption('hashLength'));
+        $filename = $filename . $hash . $extension;
+        $folderPath = $this->getOption('cachePath') . $type . '/';
+        $folderUrl = $this->getOption('cacheUrl') . $type . '/';
 
-    /**
-     * Get url of the cache file.
-     * @param string $file
-     * @return string
-     */
-    public function getFileUrl($file = null)
-    {
-        if (is_null($file)) {
-            $file = $this->getFilename();
+        $cacheManager = $this->modx->getCacheManager();
+        if (!$cacheManager->writeTree($folderPath)) {
+            throw new Exception('Could not create folder ' . $folderPath);
         }
-        return $this->getOption('cacheFolder') . $file;
-    }
-
-    /**
-     * @return string
-     */
-    public function getVersion()
-    {
-        $version = '';
-        if (!empty($this->getOption('version'))) {
-            $version = '?v=' . (($this->getOption('version') == 'auto') ? hash('crc32b', $this->getContent()) : $this->getOption('version'));
+        if (!$cacheManager->writeFile($folderPath . $filename, $content)) {
+            throw new Exception('Could not create file ' . $folderPath . $filename);
         }
-        return $version;
+        return $folderUrl . $filename;
+
     }
 
-    /**
-     * @param string $url
-     * @return string
-     */
-    protected function parseUrl($url)
+    public function clearAssetFiles()
     {
-        $url = str_replace(array('[[+', '{', '}'), array('[[++', '[[++', ']]'), $url);
-        $this->modx->getParser()->processElementTags('', $url, false, false, '[[', ']]', array(), 1);
-        return $url;
+        $types = ['js', 'css'];
+        foreach ($types as $type) {
+            $folderPath = $this->getOption('cachePath') . $type . '/';
+            $filenameRegex = '~' . $this->getOption($type . 'Filename') . '_[hbp]~';
+
+            try {
+                $files = new DirectoryIterator($folderPath);
+                foreach ($files as $fileinfo) {
+                    if (!$fileinfo->isDot() && preg_match($filenameRegex, $fileinfo->getFilename())) {
+                        if (!@unlink($fileinfo->getPathname())) {
+                            $this->modx->log(xPDO::LOG_LEVEL_ERROR, 'Could not delete ' . $fileinfo->getPathname(), '', $this->packageName);
+                        }
+                    }
+                }
+            } catch (Exception $e) {
+                $this->modx->log(xPDO::LOG_LEVEL_ERROR, $folderPath . ' does not exist!', '', $this->packageName);
+            }
+        }
+        $this->modx->cacheManager->clean($this->cacheOptions);
     }
 }

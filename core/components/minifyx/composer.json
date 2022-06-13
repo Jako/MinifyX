@@ -3,6 +3,16 @@
   "description": "Combine and minify JS and CSS files",
   "authors": [
     {
+      "name": "Patrick Nijkamp",
+      "email": "patrick@scherpontwikkeling.nl",
+      "homepage": "https://github.com/b03tz"
+    },
+    {
+      "name": "Vasily Naumkin",
+      "email": "bezumkin@yandex.ru",
+      "homepage": "https://github.com/bezumkin"
+    },
+    {
       "name": "Sergej Shlokov",
       "email": "sergant210@bk.ru",
       "homepage": "https://modzone.ru"
@@ -16,14 +26,16 @@
   "license": "GPL-2.0-or-later",
   "config": {
     "platform": {
-      "php": "7.3"
+      "php": "7.4"
     }
   },
   "require": {
-    "php": ">=7.3",
+    "php": ">=7.4",
     "assetic/framework": "^3",
     "wikimedia/minify": "^2",
-    "pfaciana/tiny-html-minifier": "^3"
+    "pfaciana/tiny-html-minifier": "^3",
+    "wikimedia/less.php": "^3.1",
+    "scssphp/scssphp": "^1.10"
   },
   "autoload": {
     "psr-4": {

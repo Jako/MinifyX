@@ -88,9 +88,18 @@ if ($object->xpdo) {
             $setting = $modx->getObject('modSystemSetting', [
                 'key' => $key
             ]);
+            /** @var modSystemSetting $newSetting */
+            $newSetting = $modx->getObject('modSystemSetting', [
+                'key' => $key
+            ]);
             if ($setting) {
-                $setting->set('key', $new);
-                $setting->save();
+                if ($newSetting) {
+                    $newSetting->set('value', $setting->get('value'));
+                    $setting->remove();
+                } else {
+                    $setting->set('key', $new);
+                    $setting->save();
+                }
             }
         }
     }
@@ -111,6 +120,23 @@ if ($object->xpdo) {
             foreach ($settings as $setting) {
                 $setting->set('area', $new);
                 $setting->save();
+            }
+        }
+    }
+
+    if (!function_exists('removeSetting')) {
+        /**
+         * @param modX $modx
+         * @param string $key
+         */
+        function removeSetting($modx, $key)
+        {
+            /** @var modSystemSetting $setting */
+            $setting = $modx->getObject('modSystemSetting', [
+                'key' => $key
+            ]);
+            if ($setting) {
+                $setting->remove();
             }
         }
     }
@@ -147,22 +173,22 @@ if ($object->xpdo) {
             $oldPackage = $modx->getObject('transport.modTransportPackage', $c);
             
             if ($oldPackage && $oldPackage->compareVersion('2.0.0-pl', '>')) {
-                changeSettingKey($modx, 'minifyx_process_registered', 'minifyx.process_registered');
-                changeSettingKey($modx, 'minifyx_process_images', 'minifyx.process_images');
-                changeSettingKey($modx, 'minifyx_exclude_registered', 'minifyx.exclude_registered');
-                changeSettingKey($modx, 'minifyx_exclude_images', 'minifyx.exclude_images');
-                changeSettingKey($modx, 'minifyx_images_filters', 'minifyx.images_filters');
+                changeSettingKey($modx, 'minifyx_process_registered', 'minifyx.processRegistered');
+                removeSetting($modx, 'minifyx_process_images');
+                changeSettingKey($modx, 'minifyx_exclude_registered', 'minifyx.excludeRegistered');
+                changeSettingKey($modx, 'minifyx_exclude_images', 'minifyx.excludeImages');
+                removeSetting($modx, 'minifyx_images_filters');
                 changeSettingKey($modx, 'minifyx_minifyJs', 'minifyx.minifyJs');
                 changeSettingKey($modx, 'minifyx_minifyCss', 'minifyx.minifyCss');
-                changeSettingKey($modx, 'minifyx_processRawJs', 'minifyx.processRawJs');
-                changeSettingKey($modx, 'minifyx_processRawCss', 'minifyx.processRawCss');
+                removeSetting($modx, 'minifyx_processRawJs');
+                removeSetting($modx, 'minifyx_processRawCss');
                 changeSettingKey($modx, 'minifyx_jsFilename', 'minifyx.jsFilename');
                 changeSettingKey($modx, 'minifyx_cssFilename', 'minifyx.cssFilename');
                 changeSettingKey($modx, 'minifyx_cacheFolder', 'minifyx.cacheFolder');
-                changeSettingKey($modx, 'minifyx_forceUpdate', 'minifyx.forceUpdate');
-                changeSettingKey($modx, 'minifyx_forceDelete', 'minifyx.forceDelete');
+                removeSetting($modx, 'minifyx_forceUpdate');
+                removeSetting($modx, 'minifyx_forceDelete');
                 changeSettingKey($modx, 'minifyx_minifyHtml', 'minifyx.minifyHtml');
-                changeSetting($modx, 'minifyx.cacheFolder', '/assets/components/minifyx/cache/', 'assets/components/minifyx/cache/');
+                changeSetting($modx, 'minifyx.cacheFolder', '/assets/components/minifyx/cache/', 'assets/minifyx/');
             }
 
             break;

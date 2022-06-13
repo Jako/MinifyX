@@ -13,8 +13,10 @@ class OnSiteRefresh extends Plugin
 {
     public function process()
     {
-        if ($this->minifyx->clearCache()) {
-            $this->modx->log(xPDO::LOG_LEVEL_INFO, $this->modx->lexicon('refresh_default') . ': MinifyX');
+        if (!$this->minifyx->prepareCacheFolder()) {
+            $this->modx->log(xPDO::LOG_LEVEL_ERROR, 'Could not create cache dir "' . $this->minifyx->getOption('cachePath') . '"', '', $this->minifyx->packageName);
         }
+        $this->minifyx->clearAssetFiles();
+        $this->modx->log(xPDO::LOG_LEVEL_INFO, $this->modx->lexicon('refresh_default') . ': MinifyX');
     }
 }

@@ -5,26 +5,22 @@
  * @package minifyx
  * @subpackage lexicon
  */
-$_lang['minifyx.minifyx.cacheFolder'] = 'The folder to the cache files from the site base URL';
-$_lang['minifyx.minifyx.cssFilename'] = 'Base name of destination css file, without extension';
-$_lang['minifyx.minifyx.cssGroups'] = 'Comma separated list of css groups.';
-$_lang['minifyx.minifyx.cssPlaceholder'] = 'Name of css placeholder. Will be used only if &registerCss=`placeholder`';
-$_lang['minifyx.minifyx.cssSources'] = 'Comma-separated list of CSS files for processing. You can specify a *.css, *.less and *.scss.';
-$_lang['minifyx.minifyx.cssTpl'] = 'Css file template for output. Placeholder "[[+file]]" must exists.';
-$_lang['minifyx.minifyx.forceUpdate'] = 'Disable check of files update and generate new scripts and styles each time.';
-$_lang['minifyx.minifyx.hooks'] = 'Comma separated list of hooks that are executed after processing. A hook can be a snippet or file.';
-$_lang['minifyx.minifyx.jsFilename'] = 'Base name of destination js file, without extension';
-$_lang['minifyx.minifyx.jsGroups'] = 'Comma separated list of js groups.';
-$_lang['minifyx.minifyx.jsPlaceholder'] = 'Name of javascript placeholder. Will be used only if &registerJs=`placeholder`';
-$_lang['minifyx.minifyx.jsSources'] = 'Comma-separated list of JS files for processing. You can specify a *.js and *.coffee.';
-$_lang['minifyx.minifyx.jsTpl'] = 'Template fo js file. Placeholder "[[+file]]" must exists.';
-$_lang['minifyx.minifyx.minifyCss'] = 'Enable CSS minify?';
-$_lang['minifyx.minifyx.minifyJs'] = 'Enable JS minify?';
-$_lang['minifyx.minifyx.preHooks'] = 'Comma separated list of hooks that are executed before processing. A hook can be a snippet or file.';
-$_lang['minifyx.minifyx.registerCss'] = 'How to register CSS? You can save it in the placeholder, call in the tag "head" (default) or output immediately (print).';
-$_lang['minifyx.minifyx.registerJs'] = 'How to register javascript? You can save it in the placeholder, call it in the tag "head" (startup), place before the closing "body" (default) or output immediately (print).';
-$_lang['minifyx.minifyx.version'] = "File version. Will be added to the link. Specify any value, or '' to disable, 'auto' to generate a hash.";
-$_lang['minifyx.properties.default'] = 'Default';
-$_lang['minifyx.properties.placeholder'] = 'Placeholder';
-$_lang['minifyx.properties.print'] = 'Print';
-$_lang['minifyx.properties.startup'] = 'Startup Script';
+$_lang['minifyx.minifyx.cacheFolder'] = 'The folder to cache the combined and minified files relative to the base path of the website';
+$_lang['minifyx.minifyx.cacheUrl'] =  'The url to the cached combined and reduced files relative to the site\'s base url';
+$_lang['minifyx.minifyx.cssFilename'] = 'Base name of the css file, without extension';
+$_lang['minifyx.minifyx.cssPlaceholder'] = 'Name of the css placeholder. Used when &registerCss is set to placeholder';
+$_lang['minifyx.minifyx.cssSources'] = 'Comma-separated list of CSS files for processing. You can specify *.css, *.less, and *.scss files.';
+$_lang['minifyx.minifyx.cssTpl'] = 'Name of a template chunk for the CSS tag. The placeholder "[[+file]]" must be present.';
+$_lang['minifyx.minifyx.forceUpdate'] = 'Disable MinifyX cache and generate new scripts and styles every time.';
+$_lang['minifyx.minifyx.jsFilename'] = 'Base name of the js file, without extension';
+$_lang['minifyx.minifyx.jsPlaceholder'] = 'Name of javascript placeholder. Used when &registerCss is set to placeholder';
+$_lang['minifyx.minifyx.jsSources'] = 'Comma-separated list of JS files for processing. You can specify *.js files.';
+$_lang['minifyx.minifyx.jsTpl'] = 'Name of a template chunk for the JS tag. Placeholder "[[+file]]" must exists.';
+$_lang['minifyx.minifyx.minifyCss'] = 'Turn on CSS minification??';
+$_lang['minifyx.minifyx.minifyJs'] = 'Turn on JS minification?';
+$_lang['minifyx.minifyx.properties.default'] = 'Default';
+$_lang['minifyx.minifyx.properties.placeholder'] = 'Placeholder';
+$_lang['minifyx.minifyx.properties.print'] = 'Print';
+$_lang['minifyx.minifyx.properties.startup'] = 'Startup';
+$_lang['minifyx.minifyx.registerCss'] = 'How do you want the CSS to be registered? It can be output in the placeholder, called in the "head" tag (Default) or output immediately (Print).';
+$_lang['minifyx.minifyx.registerJs'] = 'How do you want the javascript to be registered? It can be output in the placeholder, called in the "head" tag (Startup), placed before the closing "body" tag (Default) or output immediately (Print).';

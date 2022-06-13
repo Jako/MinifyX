@@ -1,24 +1,26 @@
 <?php
-
-$_lang['minifyx_prop_jsSources'] = 'Список JS файлов для обработки. Можно указывать *.js и *.coffee.';
-$_lang['minifyx_prop_cssSources'] = 'Список CSS файлов для обработки. Можно указывать *.css, *.less и *.scss.';
-
-$_lang['minifyx_prop_jsFilename'] = 'Базовое имя готового JS файла.';
-$_lang['minifyx_prop_cssFilename'] = 'Базовое имя готового CSS файла.';
-$_lang['minifyx_prop_minifyCss'] = 'Включить минификацию CSS?';
-$_lang['minifyx_prop_minifyJs'] = 'Включить минификацию JS?';
-
-$_lang['minifyx_prop_registerJs'] = 'Подключение javascript: можно сохранить в плейсхолдер (placeholder), вызвать в теге "head" (startup), разместить перед закрывающим "body" (default) или вывести немедленно (print).';
-$_lang['minifyx_prop_registerCss'] = 'Подключение сss: можно сохранить в плейсхолдер (placeholder), вызвать в теге "head" (default) или вывести немедленно (print).';
-$_lang['minifyx_prop_jsPlaceholder'] = 'Имя плейсхолдера javascript. Используется, если &registerJs=`placeholder`';
-$_lang['minifyx_prop_cssPlaceholder'] = 'Имя плейсхолдера css. Используется,если &registerCss=`placeholder`';
-
-$_lang['minifyx_prop_forceUpdate'] = 'Отключить проверку изменения файлов и перезаписывать новые скрипты и стили каждый раз.';
-$_lang['minifyx_prop_cacheFolder'] = 'Директория для хранения готовых файлов.';
-$_lang['minifyx_prop_cssGroups'] = 'Названия групп стилей (через запятую).';
-$_lang['minifyx_prop_jsGroups'] = 'Названия групп скриптов (через запятую).';
-$_lang['minifyx_prop_preHooks'] = 'Список хуков через запятую для предварительной обработки. Хуки могут быть сниппетами или файлами.';
-$_lang['minifyx_prop_hooks'] = 'Список хуков через запятую для обработки полученного результата. Хуки могут быть сниппетами или файлами.';
-$_lang['minifyx_prop_cssTpl'] = 'Шаблон для файла стилей. Должен быть указан плейсхолдер [[+file]].';
-$_lang['minifyx_prop_jsTpl'] = 'Шаблон для файла скриптов. Должен быть указан плейсхолдер [[+file]].';
-$_lang['minifyx_prop_version'] = "Версия файла. Добавляется к линку. Укажите любое значение, или '' для отключения, 'auto' для генерирования хэша.";
+/**
+ * Properties Lexicon Entries for MinifyX
+ *
+ * @package minifyx
+ * @subpackage lexicon
+ */
+$_lang['minifyx.minifyx.cacheFolder'] = 'Папка для кэширования объединенных и уменьшенных файлов относительно базового пути сайта';
+$_lang['minifyx.minifyx.cacheUrl'] = 'url к кэшированным объединенным и уменьшенным файлам относительно базового url сайта';
+$_lang['minifyx.minifyx.cssFilename'] = 'Базовое имя css файла, без расширения';
+$_lang['minifyx.minifyx.cssPlaceholder'] = 'Имя css-плейсхолдера. Используется, когда &registerCss имеет значение placeholder';
+$_lang['minifyx.minifyx.cssSources'] = 'Список CSS файлов для обработки, разделенный запятыми. Вы можете указать *.css, *.less и *.scss файлы.';
+$_lang['minifyx.minifyx.cssTpl'] = 'Имя шаблонного куска для тега CSS. Должен присутствовать заполнитель "[[+file]]".';
+$_lang['minifyx.minifyx.forceUpdate'] = 'Отключить кэш MinifyX и генерировать новые скрипты и стили каждый раз.';
+$_lang['minifyx.minifyx.jsFilename'] = 'Базовое имя js-файла без расширения';
+$_lang['minifyx.minifyx.jsPlaceholder'] = 'Имя javascript-плейсхолдера. Используется, когда &registerCss имеет значение placeholder';
+$_lang['minifyx.minifyx.jsSources'] = 'Список JS-файлов для обработки, разделенный запятыми. Вы можете указать *.js файлы.';
+$_lang['minifyx.minifyx.jsTpl'] = 'Имя шаблонного куска для тега JS. Должен существовать плейсхолдер "[[+файл]]".';
+$_lang['minifyx.minifyx.minifyCss'] = 'Включить минификацию CSS??';
+$_lang['minifyx.minifyx.minifyJs'] = 'Включить минификацию JS?';
+$_lang['minifyx.minifyx.properties.default'] = 'По умолчанию';
+$_lang['minifyx.minifyx.properties.placeholder'] = 'Заполнитель';
+$_lang['minifyx.minifyx.properties.print'] = 'Печать';
+$_lang['minifyx.minifyx.properties.startup'] = 'Запуск';
+$_lang['minifyx.minifyx.properties.registerCss'] = 'Как вы хотите, чтобы CSS был зарегистрирован? Он может быть выведен в placeholder, вызван в теге "head" (Default) или выведен сразу (Print).';
+$_lang['minifyx.minifyx.registerJs'] = 'Как вы хотите зарегистрировать javascript? Он может быть выведен в placeholder, вызван в теге "head" (Startup), помещен перед закрывающим тегом "body" (Default) или выведен сразу (Print).';
