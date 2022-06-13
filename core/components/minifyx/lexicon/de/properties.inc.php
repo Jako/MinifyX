@@ -5,22 +5,22 @@
  * @package minifyx
  * @subpackage lexicon
  */
-$_lang['minifyx.minifyx.cacheFolder'] = 'The folder to cache the combined and minified files relative to the base path of the website';
-$_lang['minifyx.minifyx.cacheUrl'] = 'The url to the cached combined and reduced files relative to the site\'s base url';
-$_lang['minifyx.minifyx.cssFilename'] = 'Base name of the css file, without extension';
-$_lang['minifyx.minifyx.cssPlaceholder'] = 'Name of the css placeholder. Used when &registerCss is set to placeholder';
-$_lang['minifyx.minifyx.cssSources'] = 'Comma-separated list of CSS files for processing. You can specify *.css, *.less, and *.scss files.';
-$_lang['minifyx.minifyx.cssTpl'] = 'Name of a template chunk for the CSS tag. The placeholder "[[+file]]" must be present.';
-$_lang['minifyx.minifyx.forceUpdate'] = 'Disable MinifyX cache and generate new scripts and styles every time.';
-$_lang['minifyx.minifyx.jsFilename'] = 'Base name of the js file, without extension';
-$_lang['minifyx.minifyx.jsPlaceholder'] = 'Name of javascript placeholder. Used when &registerCss is set to placeholder';
-$_lang['minifyx.minifyx.jsSources'] = 'Comma-separated list of JS files for processing. You can specify *.js files.';
-$_lang['minifyx.minifyx.jsTpl'] = 'Name of a template chunk for the JS tag. Placeholder "[[+file]]" must exists.';
-$_lang['minifyx.minifyx.minifyCss'] = 'Turn on CSS minification??';
-$_lang['minifyx.minifyx.minifyJs'] = 'Turn on JS minification?';
+$_lang['minifyx.minifyx.cacheFolder'] = 'Der Ordner zum Zwischenspeichern der kombinierten und verkleinerten Dateien relativ zum Basispfad der Website';
+$_lang['minifyx.minifyx.cacheUrl'] = 'Die URL zum Zwischenspeichern der kombinierten und verkleinerten Dateien relativ zur Basis-URL der Website';
+$_lang['minifyx.minifyx.cssFilename'] = 'Basisname der CSS-Datei, ohne Erweiterung';
+$_lang['minifyx.minifyx.cssPlaceholder'] = 'Name des CSS-Platzhalters. Wird verwendet, wenn &registerCss auf placeholder gesetzt ist';
+$_lang['minifyx.minifyx.cssSources'] = 'Kommagetrennte Liste der CSS-Dateien der zu verarbeitenden CSS-Dateien. Sie können *.css-, *.less- und *.scss-Dateien angeben.';
+$_lang['minifyx.minifyx.cssTpl'] = 'Name eines Template-Chunks für das CSS-Tag. Der Platzhalter "[[+file]]" muss vorhanden sein.';
+$_lang['minifyx.minifyx.forceUpdate'] = 'MinifyX-Cache deaktivieren und jedes Mal Skripte und Stile kombinieren und minifizieren.';
+$_lang['minifyx.minifyx.jsFilename'] = 'Basisname der JS-Datei, ohne Erweiterung';
+$_lang['minifyx.minifyx.jsPlaceholder'] = 'Name des Javascript-Platzhalters. Wird verwendet, wenn &registerCss auf placeholder gesetzt ist';
+$_lang['minifyx.minifyx.jsSources'] = 'Kommagetrennte Liste der zu verarbeitenden JS-Dateien. Sie können *.js-Dateien angeben.';
+$_lang['minifyx.minifyx.jsTpl'] = 'Name eines Template-Chunks für das JS-Tag. Der Platzhalter "[[+file]]" muss vorhanden sein.';
+$_lang['minifyx.minifyx.minifyCss'] = 'CSS-Minifizierung einschalten?';
+$_lang['minifyx.minifyx.minifyJs'] = 'JS-Minifizierung aktivieren?';
 $_lang['minifyx.minifyx.properties.default'] = 'Default';
-$_lang['minifyx.minifyx.properties.placeholder'] = 'Placeholder';
+$_lang['minifyx.minifyx.properties.placeholder'] = 'Platzhalter';
 $_lang['minifyx.minifyx.properties.print'] = 'Print';
 $_lang['minifyx.minifyx.properties.startup'] = 'Startup';
-$_lang['minifyx.minifyx.registerCss'] = 'How do you want the CSS to be registered? It can be output in the placeholder, called in the "head" tag (Default) or output immediately (Print).';
-$_lang['minifyx.minifyx.registerJs'] = 'How do you want the javascript to be registered? It can be output in the placeholder, called in the "head" tag (Startup), placed before the closing "body" tag (Default) or output immediately (Print).';
+$_lang['minifyx.minifyx.registerCss'] = 'Wie soll das CSS registriert werden? Es kann im Platzhalter ausgegeben (Platzhalter), im "head" Tag aufgerufen (Standard) oder sofort ausgegeben werden (Print).';
+$_lang['minifyx.minifyx.registerJs'] = 'Wie soll das Javascript registriert werden? Es kann im Platzhalter ausgegeben (Platzhalter), im "head" Tag aufgerufen (Startup), vor dem schließenden "body" Tag platziert (Default) oder sofort ausgegeben werden (Print).';
