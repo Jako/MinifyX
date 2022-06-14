@@ -86,7 +86,6 @@ class MinifyX
     {
         $this->modx =& $modx;
         $this->namespace = $this->getOption('namespace', $options, $this->namespace);
-        $this->packageName = $this->modx->lexicon('minifyx');
 
         $corePath = $this->getOption('core_path', $options, $this->modx->getOption('core_path', null, MODX_CORE_PATH) . 'components/' . $this->namespace . '/');
         $assetsPath = $this->getOption('assets_path', $options, $this->modx->getOption('assets_path', null, MODX_ASSETS_PATH) . 'components/' . $this->namespace . '/');
@@ -136,6 +135,8 @@ class MinifyX
 
         $lexicon = $this->modx->getService('lexicon', 'modLexicon');
         $lexicon->load($this->namespace . ':default');
+
+        $this->packageName = $this->modx->lexicon('minifyx');
     }
 
     /**

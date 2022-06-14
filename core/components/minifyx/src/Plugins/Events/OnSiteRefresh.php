@@ -17,6 +17,6 @@ class OnSiteRefresh extends Plugin
             $this->modx->log(xPDO::LOG_LEVEL_ERROR, 'Could not create cache dir "' . $this->minifyx->getOption('cachePath') . '"', '', $this->minifyx->packageName);
         }
         $this->minifyx->clearAssetFiles();
-        $this->modx->log(xPDO::LOG_LEVEL_INFO, $this->modx->lexicon('refresh_default') . ': MinifyX');
+        $this->modx->log(xPDO::LOG_LEVEL_INFO, $this->modx->lexicon('minifyx.refresh_cache', ['packagename' => $this->minifyx->packageName]));
     }
 }
