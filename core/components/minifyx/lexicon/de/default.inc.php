@@ -6,4 +6,4 @@
  * @subpackage lexicon
  */
 $_lang['minifyx'] = 'MinifyX';
-$_lang['minifyx.refresh_cache'] = 'Очистка кэша [[+packagename]]';
+$_lang['minifyx.refresh_cache'] = 'Löschen des [[+packagename]]-Caches';

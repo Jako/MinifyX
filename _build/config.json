@@ -1,0 +1,232 @@
+{
+  "name": "MinifyX",
+  "lowCaseName": "minifyx",
+  "description": "Combine and minify JS and CSS files",
+  "author": "Patrick Nijkamp, Vasily Naumkin, Sergej Shlokov, Thomas Jakobi",
+  "version": "2.0.0",
+  "package": {
+    "elements": {
+      "plugins": [
+        {
+          "name": "MinifyX",
+          "description": "Combine and minify JS and CSS files",
+          "file": "minifyx.plugin.php",
+          "events": [
+            "OnSiteRefresh",
+            "OnWebPagePrerender"
+          ]
+        }
+      ],
+      "snippets": [
+        {
+          "name": "MinifyX",
+          "description": "Combine and minify JS and CSS files",
+          "file": "minifyx.snippet.php",
+          "properties": [
+            {
+              "name": "jsSources",
+              "value": ""
+            },
+            {
+              "name": "cssSources",
+              "value": ""
+            },
+            {
+              "name": "minifyJs",
+              "type": "combo-boolean",
+              "value": "0"
+            },
+            {
+              "name": "minifyCss",
+              "type": "combo-boolean",
+              "value": "0"
+            },
+            {
+              "name": "jsFilename",
+              "value": ""
+            },
+            {
+              "name": "cssFilename",
+              "value": ""
+            },
+            {
+              "name": "cacheFolder",
+              "value": ""
+            },
+            {
+              "name": "cacheUrl",
+              "value": ""
+            },
+            {
+              "name": "jsPlaceholder",
+              "value": "MinifyX.javascript"
+            },
+            {
+              "name": "cssPlaceholder",
+              "value": "MinifyX.css"
+            },
+            {
+              "name": "registerJs",
+              "type": "list",
+              "value": "placeholder",
+              "options": [
+                {
+                  "text": "minifyx.minifyx.properties.placeholder",
+                  "value": "placeholder"
+                },
+                {
+                  "text": "minifyx.minifyx.properties.startup",
+                  "value": "startup"
+                },
+                {
+                  "text": "minifyx.minifyx.properties.default",
+                  "value": "default"
+                },
+                {
+                  "text": "minifyx.minifyx.properties.print",
+                  "value": "print"
+                }
+              ]
+            },
+            {
+              "name": "registerCss",
+              "type": "list",
+              "value": "placeholder",
+              "options": [
+                {
+                  "text": "minifyx.minifyx.properties.placeholder",
+                  "value": "placeholder"
+                },
+                {
+                  "text": "minifyx.minifyx.properties.default",
+                  "value": "default"
+                },
+                {
+                  "text": "minifyx.minifyx.properties.print",
+                  "value": "print"
+                }
+              ]
+            },
+            {
+              "name": "cssTpl",
+              "value": ""
+            },
+            {
+              "name": "jsTpl",
+              "value": ""
+            },
+            {
+              "name": "forceUpdate",
+              "type": "combo-boolean",
+              "value": "0"
+            }
+          ]
+        }
+      ],
+      "chunks": [
+        {
+          "name": "tplMinifyXcss",
+          "file": "css.chunk.html"
+        },
+        {
+          "name": "tplMinifyXjs",
+          "file": "js.chunk.html"
+        }
+      ]
+    },
+    "systemSettings": [
+      {
+        "key": "debug",
+        "type": "combo-boolean",
+        "area": "system",
+        "value": "0"
+      },
+      {
+        "key": "processRegistered",
+        "type": "combo-boolean",
+        "area": "system",
+        "value": "0"
+      },
+      {
+        "key": "excludeRegistered",
+        "area": "system",
+        "value": "#(scripts|styles)_[a-z0-9]{11}\\.#i"
+      },
+      {
+        "key": "minifyJs",
+        "type": "combo-boolean",
+        "area": "system",
+        "value": "0"
+      },
+      {
+        "key": "minifyCss",
+        "type": "combo-boolean",
+        "area": "system",
+        "value": "0"
+      },
+      {
+        "key": "jsFilename",
+        "area": "system",
+        "value": "scripts"
+      },
+      {
+        "key": "cssFilename",
+        "area": "system",
+        "value": "styles"
+      },
+      {
+        "key": "jsTpl",
+        "area": "system",
+        "value": "tplMinifyXjs"
+      },
+      {
+        "key": "cssTpl",
+        "area": "system",
+        "value": "tplMinifyXcss"
+      },
+      {
+        "key": "cacheFolder",
+        "area": "system",
+        "value": "assets/minifyx/"
+      },
+      {
+        "key": "cacheUrl",
+        "area": "system",
+        "value": "assets/minifyx/"
+      },
+      {
+        "key": "minifyHtml",
+        "type": "combo-boolean",
+        "area": "system",
+        "value": "0"
+      }
+    ]
+  },
+  "dependencies": [
+    {
+      "name": "php",
+      "version": ">=7.4"
+    },
+    {
+      "name": "modx",
+      "version": ">=2.8"
+    }
+  ],
+  "build": {
+    "readme": "docs/readme.md",
+    "license": "docs/license.md",
+    "changelog": "docs/changelog.md",
+    "setupOptions": {
+      "source": "setup.options.php"
+    },
+    "resolver": {
+      "after": [
+        "resolve.composer.php",
+        "resolve.setup.php",
+        "resolve.cleanup.php",
+        "resolve.update.php",
+        "resolve.treehillstudio.php"
+      ]
+    }
+  }
+}
