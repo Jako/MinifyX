@@ -6,3 +6,4 @@
  * @subpackage lexicon
  */
 $_lang['minifyx'] = 'MinifyX';
+$_lang['minifyx.refresh_cache'] = 'Löschen des [[+packagename]]-Caches';
