@@ -60,15 +60,6 @@ class MinifyXSnippet extends Snippet
     }
 
     /**
-     * @param $value
-     * @return array|null
-     */
-    protected function getAssociativeJson($value): ?array
-    {
-        return json_decode($value, true);
-    }
-
-    /**
      * Execute the snippet and return the result.
      *
      * @return string
