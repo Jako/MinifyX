@@ -5,8 +5,6 @@
  * @package minifyx
  * @subpackage lexicon
  */
-$_lang['minifyx.minifyx.cacheFolder'] = 'Папка для кэширования объединенных и уменьшенных файлов относительно базового пути сайта';
-$_lang['minifyx.minifyx.cacheUrl'] = 'url к кэшированным объединенным и уменьшенным файлам относительно базового url сайта';
 $_lang['minifyx.minifyx.cssFilename'] = 'Базовое имя css файла, без расширения';
 $_lang['minifyx.minifyx.cssPlaceholder'] = 'Имя css-плейсхолдера. Используется, когда &registerCss имеет значение placeholder';
 $_lang['minifyx.minifyx.cssSources'] = 'Список CSS файлов для обработки, разделенный запятыми. Вы можете указать *.css, *.less и *.scss файлы.';
@@ -22,6 +20,5 @@ $_lang['minifyx.minifyx.properties.default'] = 'По умолчанию';
 $_lang['minifyx.minifyx.properties.placeholder'] = 'Заполнитель';
 $_lang['minifyx.minifyx.properties.print'] = 'Печать';
 $_lang['minifyx.minifyx.properties.startup'] = 'Запуск';
-$_lang['minifyx.minifyx.properties.registerCss'] = 'Как вы хотите, чтобы CSS был зарегистрирован? Он может быть выведен в placeholder, вызван в теге "head" (Default) или выведен сразу (Print).';
-$_lang['minifyx.minifyx.registerJs'] = 'Как вы хотите зарегистрировать javascript? Он может быть выведен в (Placeholder), вызван в теге "head" (Startup), помещен перед закрывающим тегом "body" (Default) или выведен сразу (Print).';
 $_lang['minifyx.minifyx.registerCss'] = 'Как вы хотите, чтобы CSS был зарегистрирован? Он может быть выведен в (Placeholder), вызван в теге "head" (Default) или выведен сразу (Print).';
+$_lang['minifyx.minifyx.registerJs'] = 'Как вы хотите зарегистрировать javascript? Он может быть выведен в (Placeholder), вызван в теге "head" (Startup), помещен перед закрывающим тегом "body" (Default) или выведен сразу (Print).';

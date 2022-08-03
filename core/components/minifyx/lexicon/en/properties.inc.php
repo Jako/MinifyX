@@ -5,8 +5,6 @@
  * @package minifyx
  * @subpackage lexicon
  */
-$_lang['minifyx.minifyx.cacheFolder'] = 'The folder to cache the combined and minified files relative to the base path of the website';
-$_lang['minifyx.minifyx.cacheUrl'] = 'The url to the cached combined and reduced files relative to the site\'s base url';
 $_lang['minifyx.minifyx.cssFilename'] = 'Base name of the css file, without extension';
 $_lang['minifyx.minifyx.cssPlaceholder'] = 'Name of the css placeholder. Used when &registerCss is set to placeholder';
 $_lang['minifyx.minifyx.cssSources'] = 'Comma-separated list of CSS files for processing. You can specify *.css, *.less, and *.scss files.';

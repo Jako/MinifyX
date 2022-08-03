@@ -5,8 +5,6 @@
  * @package minifyx
  * @subpackage lexicon
  */
-$_lang['minifyx.minifyx.cacheFolder'] = 'Der Ordner zum Zwischenspeichern der kombinierten und verkleinerten Dateien relativ zum Basispfad der Website';
-$_lang['minifyx.minifyx.cacheUrl'] = 'Die URL zum Zwischenspeichern der kombinierten und verkleinerten Dateien relativ zur Basis-URL der Website';
 $_lang['minifyx.minifyx.cssFilename'] = 'Basisname der CSS-Datei, ohne Erweiterung';
 $_lang['minifyx.minifyx.cssPlaceholder'] = 'Name des CSS-Platzhalters. Wird verwendet, wenn &registerCss auf placeholder gesetzt ist';
 $_lang['minifyx.minifyx.cssSources'] = 'Kommagetrennte Liste der CSS-Dateien der zu verarbeitenden CSS-Dateien. Sie können *.css-, *.less- und *.scss-Dateien angeben.';

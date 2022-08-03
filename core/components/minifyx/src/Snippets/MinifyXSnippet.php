@@ -25,12 +25,10 @@ class MinifyXSnippet extends Snippet
         return [
             'jsSources::explodeSeparated' => '',
             'cssSources::explodeSeparated' => '',
-            'minifyJs::bool' => false,
-            'minifyCss::bool' => false,
+            'minifyJs::bool' => $this->minifyx->getOption('minifyJs'),
+            'minifyCss::bool' => $this->minifyx->getOption('minifyCss'),
             'jsFilename' => $this->minifyx->getOption('jsFilename'),
             'cssFilename' => $this->minifyx->getOption('cssFilename'),
-            'cacheFolder' => $this->minifyx->getOption('cacheFolder'),
-            'cacheUrl' => $this->minifyx->getOption('cacheUrl'),
             'jsPlaceholder' => 'MinifyX.javascript',
             'cssPlaceholder' => 'MinifyX.css',
             'registerJs::registerJs' => 'placeholder',
@@ -84,7 +82,7 @@ class MinifyXSnippet extends Snippet
                 }
 
                 $register = $this->getProperty('register' . ucfirst($type));
-                $placeholder = !empty($this->minifyx->getOption($type . 'Placeholder')) ? $this->minifyx->getOption($type . 'Placeholder') : '';
+                $placeholder = $this->getProperty($type . 'Placeholder', '');
 
                 // Prepare source files
                 $files = $this->minifyx->prepareFiles($value, $type, $register);
@@ -103,9 +101,9 @@ class MinifyXSnippet extends Snippet
                     }
                 } else {
                     // Get combined asset collection
-                    $result = $this->minifyx->getAssetCollection($type, $files, $this->minifyx->getOption('minify' . ucfirst($type)));
+                    $result = $this->minifyx->getAssetCollection($type, $files, $this->getProperty('minify' . ucfirst($type)));
                     $url = $this->minifyx->saveAssetFile($result, $type, '_p');
-                    $tag = $this->modx->getChunk($this->minifyx->getOption($type . 'Tpl'), [
+                    $tag = $this->modx->getChunk($this->getProperty($type . 'Tpl'), [
                         'file' => $url,
                     ]);
                     switch ($register) {
