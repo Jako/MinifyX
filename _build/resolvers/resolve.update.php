@@ -171,7 +171,7 @@ if ($object->xpdo) {
             ]);
             /** @var modTransportPackage $oldPackage */
             $oldPackage = $modx->getObject('transport.modTransportPackage', $c);
-            
+
             if ($oldPackage && $oldPackage->compareVersion('2.0.0-pl', '>')) {
                 changeSettingKey($modx, 'minifyx_process_registered', 'minifyx.processRegistered');
                 removeSetting($modx, 'minifyx_process_images');
@@ -189,6 +189,8 @@ if ($object->xpdo) {
                 removeSetting($modx, 'minifyx_forceDelete');
                 changeSettingKey($modx, 'minifyx_minifyHtml', 'minifyx.minifyHtml');
                 changeSetting($modx, 'minifyx.cacheFolder', '/assets/components/minifyx/cache/', 'assets/minifyx/');
+                changeSetting($modx, 'minifyx.jsTpl', '<script src="[[+file]]"></script>', 'tplMinifyXjs');
+                changeSetting($modx, 'minifyx.cssTpl', '<link rel="stylesheet" href="[[+file]]" type="text/css"/>', 'tplMinifyXCss');
             }
 
             break;

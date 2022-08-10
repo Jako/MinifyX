@@ -33,7 +33,7 @@ class OnWebPagePrerender extends Plugin
             $minify = true;
         }
         // Process images
-        // @TODO
+        // @TODO Implement this
         if ($this->minifyx->getOption('processImages', [], false)) {
             //$this->modx->resource->_output = $this->processImages($this->modx->resource->_output);
             //$minify = true;
@@ -60,6 +60,11 @@ class OnWebPagePrerender extends Plugin
         $clientStartupScripts = $this->modx->getRegisteredClientStartupScripts();
         $clientScripts = $this->modx->getRegisteredClientScripts();
 
+        if ($this->minifyx->getOption('debug')) {
+            $this->modx->log(xPDO::LOG_LEVEL_ERROR, 'Registered startup scripts:' . print_r($clientStartupScripts, true));
+            $this->modx->log(xPDO::LOG_LEVEL_ERROR, 'Registered scripts:' . print_r($clientScripts, true));
+        }
+
         // Remove inserted registered scripts in the current code
         if ($clientStartupScripts) {
             $code = str_replace($clientStartupScripts . "\n", '', $code);
@@ -78,6 +83,11 @@ class OnWebPagePrerender extends Plugin
             $registeredBodyScripts = $this->collectRegistered(($clientScripts) ? explode("\n", $clientScripts) : []);
             $registeredScripts = $this->prepareRegistered($registeredHeadScripts, $registeredBodyScripts);
             $cacheManager->set('minifyx_' . md5($clientStartupScripts . $clientScripts), $registeredScripts, 0, $this->minifyx->cacheOptions);
+
+            if ($this->minifyx->getOption('debug')) {
+                $this->modx->log(xPDO::LOG_LEVEL_ERROR, 'Collected startup scripts:' . print_r($registeredHeadScripts, true));
+                $this->modx->log(xPDO::LOG_LEVEL_ERROR, 'Collected scripts:' . print_r($registeredBodyScripts, true));
+            }
         }
 
         // Insert minified scripts
@@ -116,6 +126,11 @@ class OnWebPagePrerender extends Plugin
 
         $registeredScripts['head'] = array_filter($registeredScripts['head']);
         $registeredScripts['body'] = array_filter($registeredScripts['body']);
+
+        if ($this->minifyx->getOption('debug')) {
+            $this->modx->log(xPDO::LOG_LEVEL_ERROR, 'Prepared registered scripts:' . print_r($registeredScripts, true));
+        }
+
         return $registeredScripts;
     }
 
@@ -227,12 +242,13 @@ class OnWebPagePrerender extends Plugin
     private function registerMinBlock(array $scripts, string $prefix, string $template): string
     {
         if ($scripts) {
+            $content = '';
+            $type = 'css';
             try {
                 $assetCollection = new AssetCollection();
 
                 // Collect the assets ...
                 $webrootPath = substr($this->modx->getOption('base_path'), 0, -strlen($this->modx->getOption('base_url'))) . '/';
-                $type = 'css';
                 foreach ($scripts as $file) {
                     $file = $webrootPath . ltrim($file, '/');
                     $extension = pathinfo($file, PATHINFO_EXTENSION);
@@ -251,6 +267,9 @@ class OnWebPagePrerender extends Plugin
                             $assetCollection->add(new FileAsset($file, array(new LessphpFilter())));
                             break;
                     }
+                    if ($extension && $this->minifyx->getOption('debug')) {
+                        $this->modx->log(xPDO::LOG_LEVEL_ERROR, 'File ' . $file . ' with type ' . $type . ' added to the asset collection.');
+                    }
                 }
 
                 // ... and combine them in one file
@@ -260,17 +279,33 @@ class OnWebPagePrerender extends Plugin
                     } else {
                         $content = $assetCollection->dump(new StylesheetMinifyFilter());
                     }
+                    if ($this->minifyx->getOption('debug')) {
+                        $this->modx->log(xPDO::LOG_LEVEL_ERROR, 'Minified asset collection ' . $type . ' generated. Content length: '. strlen($content));
+                    }
                 } else {
                     $content = $assetCollection->dump();
+                    if ($this->minifyx->getOption('debug')) {
+                        $this->modx->log(xPDO::LOG_LEVEL_ERROR, 'Combined asset collection ' . $type . ' generated. Content length: '. strlen($content));
+                    }
                 }
-                if ($content) {
+            } catch (Exception $e) {
+                $this->modx->log(xPDO::LOG_LEVEL_ERROR, $e->getMessage());
+            }
+
+            if ($content) {
+                try {
                     $file = $this->minifyx->saveAssetFile($content, $type, $prefix);
                     return $this->modx->getChunk($template, [
                         'file' => $file
                     ]);
+                } catch (Exception $e) {
+                    $this->modx->log(xPDO::LOG_LEVEL_ERROR, $e->getMessage());
+                    return '';
                 }
-            } catch (Exception $e) {
-                $this->modx->log(xPDO::LOG_LEVEL_ERROR, $e->getMessage());
+            } else {
+                if ($this->minifyx->getOption('debug')) {
+                    $this->modx->log(xPDO::LOG_LEVEL_ERROR, 'No generated content for ' . $type . ' asset collection.');
+                }
             }
         }
         return '';
