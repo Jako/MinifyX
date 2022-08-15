@@ -57,8 +57,10 @@ class OnWebPagePrerender extends Plugin
      */
     private function processRegistered(string $code): string
     {
-        $clientStartupScripts = $this->modx->getRegisteredClientStartupScripts();
-        $clientScripts = $this->modx->getRegisteredClientScripts();
+        $clientStartupScripts = $this->modx->sjscripts;
+        $implodedStartupScripts = implode("\n", $clientStartupScripts);
+        $clientScripts = $this->modx->jscripts;
+        $implodedScripts = implode("\n", $clientScripts);
 
         if ($this->minifyx->getOption('debug')) {
             $this->modx->log(xPDO::LOG_LEVEL_ERROR, 'Registered startup scripts:' . print_r($clientStartupScripts, true));
@@ -67,22 +69,22 @@ class OnWebPagePrerender extends Plugin
 
         // Remove inserted registered scripts in the current code
         if ($clientStartupScripts) {
-            $code = str_replace($clientStartupScripts . "\n", '', $code);
+            $code = str_replace($implodedStartupScripts . "\n", '', $code);
         }
         if ($clientScripts) {
-            $code = str_replace($clientScripts . "\n", '', $code);
+            $code = str_replace($implodedScripts . "\n", '', $code);
         }
 
         // Any cached minified scripts?
         $cacheManager = $this->modx->getCacheManager();
-        $registeredScripts = $cacheManager->get('minifyx_' . md5($clientStartupScripts . $clientScripts), $this->minifyx->cacheOptions);
-        if (empty($registeredScripts)) {
+        $registeredScripts = $cacheManager->get('minifyx_' . md5($implodedStartupScripts . $implodedScripts), $this->minifyx->cacheOptions);
+        if (empty($registeredScripts) ||true) {
 
             // Collect the registered scripts
-            $registeredHeadScripts = $this->collectRegistered(($clientStartupScripts) ? explode("\n", $clientStartupScripts) : []);
-            $registeredBodyScripts = $this->collectRegistered(($clientScripts) ? explode("\n", $clientScripts) : []);
+            $registeredHeadScripts = $this->collectRegistered(($clientStartupScripts) ?: []);
+            $registeredBodyScripts = $this->collectRegistered(($clientScripts) ?: []);
             $registeredScripts = $this->prepareRegistered($registeredHeadScripts, $registeredBodyScripts);
-            $cacheManager->set('minifyx_' . md5($clientStartupScripts . $clientScripts), $registeredScripts, 0, $this->minifyx->cacheOptions);
+            $cacheManager->set('minifyx_' . md5($implodedStartupScripts . $implodedScripts), $registeredScripts, 0, $this->minifyx->cacheOptions);
 
             if ($this->minifyx->getOption('debug')) {
                 $this->modx->log(xPDO::LOG_LEVEL_ERROR, 'Collected startup scripts:' . print_r($registeredHeadScripts, true));
@@ -118,11 +120,11 @@ class OnWebPagePrerender extends Plugin
         $registeredScripts['head'][] = $this->registerBlock($registeredHeadScripts['jsexternal'], $this->minifyx->getOption('jsTpl'));
         $registeredScripts['head'][] = $this->registerMinBlock($registeredHeadScripts['jsmin'], '_h', $this->minifyx->getOption('jsTpl'));
         $registeredScripts['head'][] = $this->registerMinBlock($registeredHeadScripts['jsnomin'], '_h', $this->minifyx->getOption('jsTpl'));
-        $registeredScripts['head'][] = $this->registerBlock($registeredHeadScripts['untouched'], '[[+file]]');
+        $registeredScripts['head'][] = $this->registerBlock($registeredHeadScripts['untouched']);
         $registeredScripts['body'][] = $this->registerBlock($registeredBodyScripts['jsexternal'], $this->minifyx->getOption('jsTpl'));
         $registeredScripts['body'][] = $this->registerMinBlock($registeredBodyScripts['jsmin'], '_b', $this->minifyx->getOption('jsTpl'));
         $registeredScripts['body'][] = $this->registerMinBlock($registeredBodyScripts['jsnomin'], '_b', $this->minifyx->getOption('jsTpl'));
-        $registeredScripts['body'][] = $this->registerBlock($registeredBodyScripts['untouched'], '[[+file]]');
+        $registeredScripts['body'][] = $this->registerBlock($registeredBodyScripts['untouched']);
 
         $registeredScripts['head'] = array_filter($registeredScripts['head']);
         $registeredScripts['body'] = array_filter($registeredScripts['body']);
@@ -219,13 +221,17 @@ class OnWebPagePrerender extends Plugin
      * @param string $template
      * @return string
      */
-    private function registerBlock(array $scripts, string $template): string
+    private function registerBlock(array $scripts, string $template = ''): string
     {
         $block = [];
         foreach ($scripts as $script) {
-            $block[] = $this->modx->getChunk($template, [
-                'file' => $script,
-            ]);
+            if ($template) {
+                $block[] = $this->modx->getChunk($template, [
+                    'file' => $script,
+                ]);
+            } else {
+                $block[] = $script;
+            }
             break;
         }
         return implode("\r\n", $block);
@@ -280,12 +286,12 @@ class OnWebPagePrerender extends Plugin
                         $content = $assetCollection->dump(new StylesheetMinifyFilter());
                     }
                     if ($this->minifyx->getOption('debug')) {
-                        $this->modx->log(xPDO::LOG_LEVEL_ERROR, 'Minified asset collection ' . $type . ' generated. Content length: '. strlen($content));
+                        $this->modx->log(xPDO::LOG_LEVEL_ERROR, 'Minified asset collection ' . $type . ' generated. Content length: ' . strlen($content));
                     }
                 } else {
                     $content = $assetCollection->dump();
                     if ($this->minifyx->getOption('debug')) {
-                        $this->modx->log(xPDO::LOG_LEVEL_ERROR, 'Combined asset collection ' . $type . ' generated. Content length: '. strlen($content));
+                        $this->modx->log(xPDO::LOG_LEVEL_ERROR, 'Combined asset collection ' . $type . ' generated. Content length: ' . strlen($content));
                     }
                 }
             } catch (Exception $e) {

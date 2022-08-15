@@ -51,7 +51,7 @@ class MinifyX
      * The version
      * @var string $version
      */
-    public string $version = '2.0.1';
+    public string $version = '2.0.2';
 
     /**
      * The class options
