@@ -5,8 +5,6 @@ example values:
 
 ```
 [[!MinifyX?
-&cacheFolder=`assets/minifyx/`
-&cacheUrl=`assets/minifyx/`
 &cssFilename=`style`
 &cssPlaceholder=`MinifyX.css`
 &cssSources=`
@@ -27,16 +25,45 @@ assets/js/bootstrap.bundle.min.js,
 &registerCss=`placeholder`
 &registerJs=`placeholder`
 ]]
-#
+```
+
+The following placeholders have to be added in the template.
+
+```
 [[!+MinifyX.javascript]]
 [[!+MinifyX.css]]
-#
 ```
+
+The snippet and the placeholder have to be called both uncached or both cached.
+If they are called cached, the generated minified files are only created when
+the resource is not cached, so you can't change the minified assets on the fly.
+
+There is an internal MinifyX cache used, so it is not a real issue to call the
+snippet uncached.
+
+### Use without placeholder
+
+If you don't want to use the placeholder, you can replace the following lines in
+the snippet call above.
+
+```
+&registerCss=`default`
+&registerJs=`default`
+```
+
+That way, the snippet will insert the script and style tags automatically in the
+code with the MODX regClient methods.
 
 ## Plugin
 
-To register the javascript and stylesheet files with the MODX API methods you
-can use the following example code:
+All registered javascript and stylesheet files of other MODX extras can be at
+least combined and optionally minified. To combine the files you have to enable
+the `minifyx.processRegistered` system setting. To minify the registered
+javascripts, you have to enable `minifyx.minifyJs`. To minify the registered
+styles, you have to enable `minifyx.minifyCss`.
+
+To register javascript and stylesheet files directly on the page with the MODX
+regClient API methods, you can use the following example:
 
 ```
 [[*id:input=`assets/css/bootstrap.min.css`:cssToHead]]
@@ -45,6 +72,3 @@ can use the following example code:
 [[*id:input=`assets/js/bootstrap.bundle.min.js`:jsToHead]]
 [[*id:input=`assets/js/scripts.js`:jsToBottom]]
 ```
-
-To combine and optionally minify the javascript and stylesheet files you have to enable the
-processRegistered system setting.
