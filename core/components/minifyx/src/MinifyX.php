@@ -51,7 +51,7 @@ class MinifyX
      * The version
      * @var string $version
      */
-    public string $version = '2.0.2';
+    public string $version = '2.0.3';
 
     /**
      * The class options
@@ -241,11 +241,22 @@ class MinifyX
     public function getAssetCollection($type, $files, $minify): string
     {
         try {
-            $webrootPath = substr($this->modx->getOption('base_path'), 0, -strlen($this->modx->getOption('base_url'))) . '/';
+            if ($this->getOption('debug')) {
+                $this->modx->log(xPDO::LOG_LEVEL_ERROR, 'Collected asset collection: ' . print_r($files, true));
+            }
+
+            if (substr($this->modx->getOption('base_path'), -strlen($this->modx->getOption('base_url'))) === $this->modx->getOption('base_url')) {
+                $webrootPath = substr($this->modx->getOption('base_path'), 0, -strlen($this->modx->getOption('base_url'))) . '/';
+            } else {
+                $webrootPath = $this->modx->getOption('base_path');
+            }
             $collection = new AssetCollection();
             foreach ($files as $file) {
                 $file = $webrootPath . ltrim($file, '/');
                 $extension = pathinfo($file, PATHINFO_EXTENSION);
+                if ($this->getOption('debug')) {
+                    $this->modx->log(xPDO::LOG_LEVEL_ERROR, 'File added to the asset collection: ' . $file);
+                }
                 switch ($extension) {
                     case 'js':
                     case 'css':

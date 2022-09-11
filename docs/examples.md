@@ -72,3 +72,17 @@ regClient API methods, you can use the following example:
 [[*id:input=`assets/js/bootstrap.bundle.min.js`:jsToHead]]
 [[*id:input=`assets/js/scripts.js`:jsToBottom]]
 ```
+
+## Debugging
+
+If you are facing issues with MinifyX, you can use the `minifyx.debug` system
+setting. If this setting is enabled, the added files to the assets collection is
+logged with the server path. 
+
+All errors inside Assetic are logged without enabling this system setting.
+Assetic will throw an error, when the file is not found, parts of the scripts
+and styles are invalid etc.
+
+So please use the MODX error log first to locate MinifyX issues. If you detect a
+bug inside MinifyX, feel free to add it to the [bug
+tracker](https://github.com/Jako/MinifyX/issues)
