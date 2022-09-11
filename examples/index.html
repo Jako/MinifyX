@@ -356,6 +356,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#debugging" class="md-nav__link">
+    Debugging
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -425,6 +432,13 @@
         <li class="md-nav__item">
   <a href="#plugin" class="md-nav__link">
     Plugin
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#debugging" class="md-nav__link">
+    Debugging
   </a>
   
 </li>
@@ -504,6 +518,16 @@ regClient API methods, you can use the following example:</p>
 [[*id:input=`assets/js/bootstrap.bundle.min.js`:jsToHead]]
 [[*id:input=`assets/js/scripts.js`:jsToBottom]]
 </code></pre></div>
+<h2 id="debugging">Debugging</h2>
+<p>If you are facing issues with MinifyX, you can use the <code>minifyx.debug</code> system
+setting. If this setting is enabled, the added files to the assets collection is
+logged with the server path. </p>
+<p>All errors inside Assetic are logged without enabling this system setting.
+Assetic will throw an error, when the file is not found, parts of the scripts
+and styles are invalid etc.</p>
+<p>So please use the MODX error log first to locate MinifyX issues. If you detect a
+bug inside MinifyX, feel free to add it to the <a href="https://github.com/Jako/MinifyX/issues">bug
+tracker</a></p>
                 
               
               
