@@ -76,7 +76,7 @@ regClient API methods, you can use the following example:
 ## Debugging
 
 If you are facing issues with MinifyX, you can use the `minifyx.debug` system
-setting. If this setting is enabled, the added files to the assets collection is
+setting. If this setting is enabled, the added files to the assets collection are
 logged with the server path. 
 
 All errors inside Assetic are logged without enabling this system setting.
