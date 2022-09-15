@@ -208,6 +208,9 @@
     "readme": "docs/readme.md",
     "license": "docs/license.md",
     "changelog": "docs/changelog.md",
+    "options": {
+      "composer": true
+    },
     "setupOptions": {
       "source": "setup.options.php"
     },
