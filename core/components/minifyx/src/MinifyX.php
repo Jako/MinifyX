@@ -332,6 +332,8 @@ class MinifyX
                 $this->modx->log(xPDO::LOG_LEVEL_ERROR, $folderPath . ' does not exist!', '', $this->packageName);
             }
         }
-        $this->modx->cacheManager->clean($this->cacheOptions);
+        $this->modx->cacheManager->refresh([
+            'minifyx' => [],
+        ]);
     }
 }
