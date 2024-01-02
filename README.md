@@ -1,4 +1,4 @@
-[![Default Lexicon](https://hosted.weblate.org/widgets/modx-extras/minifyx/standard/svg-badge.svg)](https://hosted.weblate.org/projects/modx-extras/minifyx/standard/)
+[![Default Lexicon](https://hosted.weblate.org/widget/modx-extras/minifyx/standard/svg-badge.svg)](https://hosted.weblate.org/projects/modx-extras/minifyx/standard/)
 
 # MinifyX
 
