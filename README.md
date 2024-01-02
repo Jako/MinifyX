@@ -1,4 +1,4 @@
-[![Default Lexicon](https://hosted.weblate.org/widgets/modx-extras/-/modx-minifyx-standard/svg-badge.svg)](https://hosted.weblate.org/projects/modx-extras/modx-minifyx-standard/)
+[![Default Lexicon](https://hosted.weblate.org/widgets/modx-extras/minifyx/standard/svg-badge.svg)](https://hosted.weblate.org/projects/modx-extras/minifyx/standard/)
 
 # MinifyX
 
@@ -25,4 +25,4 @@ The project is licensed under the [GPLv2 license](https://github.com/Jako/Minify
 
 ## Translations
 
-Translations of the package can be made for the [Default Lexicon](https://hosted.weblate.org/projects/modx-extras/modx-minifyx-standard/), the [Properties Lexicon](https://hosted.weblate.org/projects/modx-extras/modx-minifyx-properties/) and the [System Setting Lexicon](https://hosted.weblate.org/projects/modx-extras/modx-minifyx-system-settings/)
+Translations of the package can be made for the [Default Lexicon](https://hosted.weblate.org/projects/modx-extras/minifyx/standard/), the [Properties Lexicon](https://hosted.weblate.org/projects/modx-extras/minifyx/properties/) and the [System Setting Lexicon](https://hosted.weblate.org/projects/modx-extras/minifyx/system-settings/)
