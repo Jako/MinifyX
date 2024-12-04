@@ -3,7 +3,7 @@
 To use the snippet, you can use the following full snippet call with default and
 example values:
 
-```
+```html
 [[!MinifyX?
 &cssFilename=`style`
 &cssPlaceholder=`MinifyX.css`
@@ -29,7 +29,7 @@ assets/js/bootstrap.bundle.min.js,
 
 The following placeholders have to be added in the template.
 
-```
+```html
 [[!+MinifyX.javascript]]
 [[!+MinifyX.css]]
 ```
@@ -46,7 +46,7 @@ snippet uncached.
 If you don't want to use the placeholder, you can replace the following lines in
 the snippet call above.
 
-```
+```html
 &registerCss=`default`
 &registerJs=`default`
 ```
@@ -65,7 +65,7 @@ styles, you have to enable `minifyx.minifyCss`.
 To register javascript and stylesheet files directly on the page with the MODX
 regClient API methods, you can use the following example:
 
-```
+```html
 [[*id:input=`assets/css/bootstrap.min.css`:cssToHead]]
 [[*id:input=`assets/css/styles.css`:cssToHead]]
 [[*id:input=`assets/js/jquery.js`:jsToHead]]
