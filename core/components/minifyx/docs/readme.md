@@ -27,6 +27,12 @@ https://github.com/Jako/MinifyX
 
 This extra includes third party software, for which we are thankful.
 
-- Assetic, MIT License
-- Jens Törnell/Tiny Html Minifier, MIT License
-- Wikimedia/Minify, Apache-2.0 License
+* assetic/framework@v3.1.3 [MIT]
+* pear/net_url2@v2.2.2 [BSD-3-Clause]
+* pfaciana/tiny-html-minifier@3.0.0 [MIT]
+* scssphp/scssphp@v1.13.0 [MIT]
+* symfony/deprecation-contracts@v2.5.4 [MIT]
+* symfony/polyfill-php80@v1.31.0 [MIT]
+* symfony/process@v5.4.47 [MIT]
+* wikimedia/less.php@v3.2.1 [Apache-2.0]
+* wikimedia/minify@2.7.0 [Apache-2.0]

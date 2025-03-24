@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.4] - 2025-03-24
+
+### Changed
+
+- Update the composer dependencies for security reasons (symfony/process from 5.4.8 to 5.4.46)
+
 ## [2.0.3] - 2022-09-11
 
 ### Fixed
