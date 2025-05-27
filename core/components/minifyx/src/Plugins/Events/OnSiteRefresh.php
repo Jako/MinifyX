@@ -13,7 +13,7 @@ class OnSiteRefresh extends Plugin
 {
     public function process()
     {
-        if (!$this->minifyx->prepareCacheFolder()) {
+        if (!$this->minifyx->prepareCachePath()) {
             $this->modx->log(xPDO::LOG_LEVEL_ERROR, 'Could not create cache dir "' . $this->minifyx->getOption('cachePath') . '"', '', $this->minifyx->packageName);
         }
         $this->minifyx->clearAssetFiles();

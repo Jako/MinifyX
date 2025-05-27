@@ -67,7 +67,7 @@ class MinifyXSnippet extends Snippet
     {
         // Work only on frontend
         if ($this->modx->context->key != 'mgr') {
-            if (!$this->minifyx->prepareCacheFolder()) {
+            if (!$this->minifyx->prepareCachePath()) {
                 $this->modx->log(xPDO::LOG_LEVEL_ERROR, 'Could not create cache dir "' . $this->minifyx->getOption('cachePath') . '"', '', $this->minifyx->packageName);
             }
 

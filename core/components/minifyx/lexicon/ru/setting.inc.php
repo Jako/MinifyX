@@ -5,8 +5,8 @@
  * @package minifyx
  * @subpackage lexicon
  */
-$_lang['setting_minifyx.cacheFolder'] = 'Папка кэша';
-$_lang['setting_minifyx.cacheFolder_desc'] = 'Укажите папку, в которую плагин будет помещать результаты своей работы. Вы можете указать несуществующую папку, она будет создана автоматически.';
+$_lang['setting_minifyx.cachePath'] = 'Папка кэша';
+$_lang['setting_minifyx.cachePath_desc'] = 'Укажите папку, в которую плагин будет помещать результаты своей работы. Вы можете указать несуществующую папку, она будет создана автоматически.';
 $_lang['setting_minifyx.cacheUrl'] = 'URL-адрес кэша';
 $_lang['setting_minifyx.cacheUrl_desc'] = 'Укажите URL, куда плагин будет помещать результаты своей работы. Он должен указывать на папку кэша.';
 $_lang['setting_minifyx.cssFilename'] = 'Имя файла CSS';

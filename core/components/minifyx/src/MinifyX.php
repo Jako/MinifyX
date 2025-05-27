@@ -51,7 +51,7 @@ class MinifyX
      * The version
      * @var string $version
      */
-    public string $version = '2.0.4';
+    public string $version = '2.0.5';
 
     /**
      * The class options
@@ -164,11 +164,11 @@ class MinifyX
     }
 
     /**
-     * Checks and creates cache folder for storing prepared scripts and styles
+     * Checks and creates cache path for storing prepared scripts and styles
      *
      * @return bool
      */
-    public function prepareCacheFolder(): bool
+    public function prepareCachePath(): bool
     {
         $success = true;
 

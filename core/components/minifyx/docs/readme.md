@@ -32,7 +32,7 @@ This extra includes third party software, for which we are thankful.
 * pfaciana/tiny-html-minifier@3.0.0 [MIT]
 * scssphp/scssphp@v1.13.0 [MIT]
 * symfony/deprecation-contracts@v2.5.4 [MIT]
-* symfony/polyfill-php80@v1.31.0 [MIT]
+* symfony/polyfill-php80@v1.32.0 [MIT]
 * symfony/process@v5.4.47 [MIT]
 * wikimedia/less.php@v3.2.1 [Apache-2.0]
 * wikimedia/minify@2.7.0 [Apache-2.0]

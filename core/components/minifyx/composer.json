@@ -1,6 +1,7 @@
 {
   "name": "treehillstudio/minifyx",
   "description": "Combine and minify JS and CSS files",
+  "version": "2.0.5",
   "authors": [
     {
       "name": "Patrick Nijkamp",

@@ -5,8 +5,8 @@
  * @package minifyx
  * @subpackage lexicon
  */
-$_lang['setting_minifyx.cacheFolder'] = 'Cache-Ordner';
-$_lang['setting_minifyx.cacheFolder_desc'] = 'Geben Sie den Ordner an, in dem das Plugin die Ergebnisse seiner Arbeit ablegt. Sie können einen nicht existierenden Ordner angeben, er wird dann automatisch erstellt.';
+$_lang['setting_minifyx.cachePath'] = 'Cache-Ordner';
+$_lang['setting_minifyx.cachePath_desc'] = 'Geben Sie den Ordner an, in dem das Plugin die Ergebnisse seiner Arbeit ablegt. Sie können einen nicht existierenden Ordner angeben, er wird dann automatisch erstellt.';
 $_lang['setting_minifyx.cacheUrl'] = 'Cache URL';
 $_lang['setting_minifyx.cacheUrl_desc'] = 'Geben Sie die URL an, von der das Plugin die Ergebnisse seiner Arbeit abruft. Die URL muss auf den Cache-Ordner verweisen.';
 $_lang['setting_minifyx.cssFilename'] = 'CSS Dateiname';

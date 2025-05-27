@@ -193,6 +193,10 @@ if ($object->xpdo) {
                 changeSetting($modx, 'minifyx.cssTpl', '<link rel="stylesheet" href="[[+file]]" type="text/css"/>', 'tplMinifyXCss');
             }
 
+            if ($oldPackage && $oldPackage->compareVersion('2.0.5-pl', '>')) {
+                changeSettingKey($modx, 'minifyx.cacheFolder', 'minifyx.cachePath');
+            }
+
             break;
     }
 }
