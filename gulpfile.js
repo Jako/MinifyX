@@ -21,28 +21,28 @@ const bumpCopyright = function () {
     return gulp.src([
         'core/components/minifyx/model/minifyx/minifyx.class.php',
         'core/components/minifyx/src/MinifyX.php',
-    ], {base: './'})
+    ], { base: './' })
         .pipe(replace(/Copyright 2021(-\d{4})? by/g, 'Copyright ' + (year > 2021 ? '2021-' : '') + year + ' by'))
         .pipe(gulp.dest('.'));
 };
 const bumpVersion = function () {
     return gulp.src([
         'core/components/minifyx/src/MinifyX.php',
-    ], {base: './'})
+    ], { base: './' })
         .pipe(replace(/version = '\d+\.\d+\.\d+-?[0-9a-z]*'/ig, 'version = \'' + pkg.version + '\''))
         .pipe(gulp.dest('.'));
 };
 const bumpDocs = function () {
     return gulp.src([
-        'mkdocs.yml',
-    ], {base: './'})
+        'zensical.toml',
+    ], { base: './' })
         .pipe(replace(/&copy; 2021(-\d{4})?/g, '&copy; ' + (year > 2021 ? '2021-' : '') + year))
         .pipe(gulp.dest('.'));
 };
 const bumpRequirements = function () {
     return gulp.src([
         'docs/index.md',
-    ], {base: './'})
+    ], { base: './' })
         .pipe(replace(/[*-] MODX Revolution \d.\d.*/g, '* MODX Revolution ' + modxversion + '+'))
         .pipe(replace(/[*-] PHP (v)?\d.\d.*/g, '* PHP ' + phpversion + '+'))
         .pipe(gulp.dest('.'));
@@ -50,7 +50,7 @@ const bumpRequirements = function () {
 const bumpComposer = function () {
     return gulp.src([
         'core/components/minifyx/composer.json',
-    ], {base: './'})
+    ], { base: './' })
         .pipe(replace(/"version": "\d+\.\d+\.\d+-?[0-9a-z]*"/ig, '"version": "' + pkg.version + '"'))
         .pipe(gulp.dest('.'));
 };
