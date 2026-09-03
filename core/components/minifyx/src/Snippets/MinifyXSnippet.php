@@ -8,6 +8,7 @@
 
 namespace TreehillStudio\MinifyX\Snippets;
 
+use Exception;
 use xPDO;
 
 /**
@@ -102,7 +103,12 @@ class MinifyXSnippet extends Snippet
                 } else {
                     // Get combined asset collection
                     $result = $this->minifyx->getAssetCollection($type, $files, $this->getProperty('minify' . ucfirst($type)));
-                    $url = $this->minifyx->saveAssetFile($result, $type, '_p');
+                    try {
+                        $url = $this->minifyx->saveAssetFile($result, $type, '_p');
+                    } catch (Exception $e) {
+                        $this->modx->log(xPDO::LOG_LEVEL_ERROR, $e->getMessage(), '', $type);
+                        return '';
+                    }
                     $tag = $this->modx->getChunk($this->getProperty($type . 'Tpl'), [
                         'file' => $url,
                     ]);

@@ -20,5 +20,5 @@ $_lang['minifyx.minifyx.properties.default'] = 'Default';
 $_lang['minifyx.minifyx.properties.placeholder'] = 'Platzhalter';
 $_lang['minifyx.minifyx.properties.print'] = 'Print';
 $_lang['minifyx.minifyx.properties.startup'] = 'Startup';
-$_lang['minifyx.minifyx.registerCss'] = 'Wie soll das CSS registriert werden? Es kann im Platzhalter ausgegeben (Platzhalter), im "head" Tag aufgerufen (Standard) oder sofort ausgegeben werden (Print).';
-$_lang['minifyx.minifyx.registerJs'] = 'Wie soll das Javascript registriert werden? Es kann im Platzhalter ausgegeben (Platzhalter), im "head" Tag aufgerufen (Startup), vor dem schließenden "body" Tag platziert (Default) oder sofort ausgegeben werden (Print).';
+$_lang['minifyx.minifyx.registerCss'] = 'Wie soll das CSS registriert werden? Es kann im Platzhalter ausgegeben, im "head" Tag aufgerufen (Standard) oder sofort ausgegeben werden (Print).';
+$_lang['minifyx.minifyx.registerJs'] = 'Wie soll das Javascript registriert werden? Es kann im Platzhalter ausgegeben, im "head" Tag aufgerufen (Startup), vor dem schließenden "body" Tag platziert (Default) oder sofort ausgegeben werden (Print).';

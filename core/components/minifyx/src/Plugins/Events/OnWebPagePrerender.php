@@ -78,7 +78,7 @@ class OnWebPagePrerender extends Plugin
         // Any cached minified scripts?
         $cacheManager = $this->modx->getCacheManager();
         $registeredScripts = $cacheManager->get('minifyx_' . md5($implodedStartupScripts . $implodedScripts), $this->minifyx->cacheOptions);
-        if (empty($registeredScripts) ||true) {
+        if (empty($registeredScripts)) {
 
             // Collect the registered scripts
             $registeredHeadScripts = $this->collectRegistered(($clientStartupScripts) ?: []);
@@ -300,7 +300,11 @@ class OnWebPagePrerender extends Plugin
 
             if ($content) {
                 try {
-                    $file = $this->minifyx->saveAssetFile($content, $type, $prefix);
+                    try {
+                        $file = $this->minifyx->saveAssetFile($content, $type, $prefix);
+                    } catch (Exception $e) {
+                        return '';
+                    }
                     return $this->modx->getChunk($template, [
                         'file' => $file
                     ]);

@@ -51,7 +51,7 @@ class MinifyX
      * The version
      * @var string $version
      */
-    public string $version = '2.0.6';
+    public string $version = '2.0.7';
 
     /**
      * The class options
@@ -301,10 +301,10 @@ class MinifyX
         $folderUrl = $this->getOption('cacheUrl') . $type . '/';
 
         $cacheManager = $this->modx->getCacheManager();
-        if (!$cacheManager->writeTree($folderPath)) {
+        if ($cacheManager->writeTree($folderPath) === false) {
             throw new Exception('Could not create folder ' . $folderPath);
         }
-        if (!$cacheManager->writeFile($folderPath . $filename, $content)) {
+        if ($cacheManager->writeFile($folderPath . $filename, $content) === false) {
             throw new Exception('Could not create file ' . $folderPath . $filename);
         }
         return $folderUrl . $filename;

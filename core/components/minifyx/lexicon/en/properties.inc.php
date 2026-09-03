@@ -20,5 +20,5 @@ $_lang['minifyx.minifyx.properties.default'] = 'Default';
 $_lang['minifyx.minifyx.properties.placeholder'] = 'Placeholder';
 $_lang['minifyx.minifyx.properties.print'] = 'Print';
 $_lang['minifyx.minifyx.properties.startup'] = 'Startup';
-$_lang['minifyx.minifyx.registerCss'] = 'How do you want the CSS to be registered? It can be output in the placeholder (Placeholder), called in the "head" tag (Default) or output immediately (Print).';
-$_lang['minifyx.minifyx.registerJs'] = 'How do you want the javascript to be registered? It can be output in the placeholder (Placeholder), called in the "head" tag (Startup), placed before the closing "body" tag (Default) or output immediately (Print).';
+$_lang['minifyx.minifyx.registerCss'] = 'How do you want the CSS to be registered? It can be output in the placeholder, called in the "head" tag (Default) or output immediately (Print).';
+$_lang['minifyx.minifyx.registerJs'] = 'How do you want the javascript to be registered? It can be output in the placeholder, called in the "head" tag (Startup), placed before the closing "body" tag (Default) or output immediately (Print).';

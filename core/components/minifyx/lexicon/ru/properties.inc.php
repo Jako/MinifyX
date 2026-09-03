@@ -20,5 +20,5 @@ $_lang['minifyx.minifyx.properties.default'] = 'По умолчанию';
 $_lang['minifyx.minifyx.properties.placeholder'] = 'Заполнитель';
 $_lang['minifyx.minifyx.properties.print'] = 'Печать';
 $_lang['minifyx.minifyx.properties.startup'] = 'Запуск';
-$_lang['minifyx.minifyx.registerCss'] = 'Как вы хотите, чтобы CSS был зарегистрирован? Он может быть выведен в (Placeholder), вызван в теге "head" (Default) или выведен сразу (Print).';
-$_lang['minifyx.minifyx.registerJs'] = 'Как вы хотите зарегистрировать javascript? Он может быть выведен в (Placeholder), вызван в теге "head" (Startup), помещен перед закрывающим тегом "body" (Default) или выведен сразу (Print).';
+$_lang['minifyx.minifyx.registerCss'] = 'Как вы хотите, чтобы CSS был зарегистрирован? Он может быть выведен в, вызван в теге "head" (Default) или выведен сразу (Print).';
+$_lang['minifyx.minifyx.registerJs'] = 'Как вы хотите зарегистрировать javascript? Он может быть выведен в, вызван в теге "head" (Startup), помещен перед закрывающим тегом "body" (Default) или выведен сразу (Print).';
