@@ -1,3 +1,7 @@
+---
+title: MinifyX
+---
+
 # MinifyX
 
 MinifyX is a MODX Revolution extra that allows to combine and minify JS and CSS

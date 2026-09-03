@@ -1,3 +1,7 @@
+---
+title: Examples
+---
+
 ## Snippet
 
 To use the snippet, you can use the following full snippet call with default and

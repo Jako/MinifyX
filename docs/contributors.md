@@ -1,3 +1,7 @@
+---
+title: Contributors
+---
+
 The MinifyX project was started in 2021 by [Patrick
 Nijkamp](https://github.com/b03tz). It was developed further by [Vasily
 Naumkin](https://github.com/bezumkin) and [Sergey

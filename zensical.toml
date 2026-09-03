@@ -12,6 +12,7 @@ nav = [
     "index.md",
     "installation.md",
     "usage.md",
+    "examples.md",
     "changelog.md",
     "contributors.md"
 ]

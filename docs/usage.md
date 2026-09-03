@@ -1,3 +1,7 @@
+---
+title: Usage
+---
+
 After the package is installed, you can use the snippet and the plugin to create
 combined and optionally minified assets.
 

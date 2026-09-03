@@ -1,3 +1,7 @@
+---
+title: Installation
+---
+
 ## Install from MODX Extras
 
 Search for MinifyX in the Package Manager of your MODX
