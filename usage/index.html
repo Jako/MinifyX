@@ -618,7 +618,7 @@ combined and optionally minified assets.</p>
 <tr>
 <td>forceUpdate</td>
 <td>Disable MinifyX cache and generate new scripts and styles every time.</td>
-<td>No</td>
+<td>0 (No)</td>
 </tr>
 <tr>
 <td>jsFilename</td>
@@ -642,13 +642,13 @@ combined and optionally minified assets.</p>
 </tr>
 <tr>
 <td>minifyCss</td>
-<td>Turn on CSS minification??</td>
-<td>No</td>
+<td>Turn on CSS minification?</td>
+<td>0 (No)</td>
 </tr>
 <tr>
 <td>minifyJs</td>
 <td>Turn on JS minification?</td>
-<td>No</td>
+<td>0 (No)</td>
 </tr>
 <tr>
 <td>registerCss</td>
@@ -671,69 +671,82 @@ combined and optionally minified assets.</p>
 <thead>
 <tr>
 <th>Key</th>
+<th>Name</th>
 <th>Description</th>
 <th>Default</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>cachePath</td>
+<td>minifyx.cachePath</td>
+<td>Cache Folder</td>
 <td>Specify the folder where the plugin will put the results of it’s work. You can specify a non-existent folder, it will be created automatically.</td>
 <td>assets/minifyx/</td>
 </tr>
 <tr>
-<td>cacheUrl</td>
-<td>Specify the url where the plugin will put the results of it’s work. It has to point to the cache folder.</td>
+<td>minifyx.cacheUrl</td>
+<td>Cache URL</td>
+<td>Specify the URL where the plugin will put the results of it’s work. It has to point to the cache folder.</td>
 <td>assets/minifyx/</td>
 </tr>
 <tr>
-<td>cssFilename</td>
-<td>Specify the name of the prepared CSS file that will contain all processed scripts. To it will be added the time of creation and suffix .min, if compression is enabled.</td>
+<td>minifyx.cssFilename</td>
+<td>CSS Filename</td>
+<td>Specify the name of the CSS file that will contain all combined styles. The suffix .min will be added when compression is enabled.</td>
 <td>styles</td>
 </tr>
 <tr>
-<td>cssTpl</td>
-<td>Name of a template chunk for the CSS tag. Placeholder "[[+file]]" must exists.</td>
+<td>minifyx.cssTpl</td>
+<td>CSS Template</td>
+<td>Name of a template chunk for the CSS tag. The placeholder "[[+file]]" must be present.</td>
 <td>tplMinifyXcss</td>
 </tr>
 <tr>
-<td>debug</td>
-<td>Log <a href="../examples/#debugging">debug information</a> in the MODX error log.</td>
+<td>minifyx.debug</td>
+<td>Debug</td>
+<td>Log debug information in the MODX error log.</td>
 <td>No</td>
 </tr>
 <tr>
-<td>excludeRegistered</td>
-<td>A regular expression for exclude files from processing. By default excludes scripts and styles prepared by snippet MinifyX.</td>
+<td>minifyx.excludeRegistered</td>
+<td>Exclude Scripts and Styles</td>
+<td>A regular expression for excludeing files from processing.</td>
 <td>#(scripts&#x7c;styles)_[a-z0-9]{11}.#i</td>
 </tr>
 <tr>
-<td>jsFilename</td>
-<td>Specify the name of the prepared javascript file that will contain all processed scripts. To it will be added the time of creation and suffix .min, if compression is enabled</td>
+<td>minifyx.jsFilename</td>
+<td>Javascript Filename</td>
+<td>Specify the name of the javascript file that will contain all combined scripts. The suffix .min will be added when compression is enabled.</td>
 <td>scripts</td>
 </tr>
 <tr>
-<td>jsTpl</td>
+<td>minifyx.jsTpl</td>
+<td>Javascript Template</td>
 <td>Name of a template chunk for the JS tag. Placeholder "[[+file]]" must exists.</td>
 <td>tplMinifyXjs</td>
 </tr>
 <tr>
-<td>minifyCss</td>
-<td>You can enable compression CSS compression. All files that have suffix .min in the name will be skipped.</td>
+<td>minifyx.minifyCss</td>
+<td>Compress CSS</td>
+<td>Enable CSS compression.</td>
 <td>No</td>
 </tr>
 <tr>
-<td>minifyHtml</td>
+<td>minifyx.minifyHtml</td>
+<td>Compress HTML</td>
 <td>Compress the page content before output.</td>
 <td>No</td>
 </tr>
 <tr>
-<td>minifyJs</td>
-<td>You can enable compression javascript compression. All files that have suffix .min in the name will be skipped.</td>
+<td>minifyx.minifyJs</td>
+<td>Compress Javascript</td>
+<td>Enable javascript compression.</td>
 <td>No</td>
 </tr>
 <tr>
-<td>processRegistered</td>
-<td>You can enable automatic processing of all registered scripts and styles of the page using the plugin MinifyX.</td>
+<td>minifyx.processRegistered</td>
+<td>Process Registered</td>
+<td>You can enable automatic processing of all registered scripts and styles of the page using the MinifyX plugin.</td>
 <td>No</td>
 </tr>
 </tbody>
