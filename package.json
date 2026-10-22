@@ -1,16 +1,19 @@
 {
+  "fullname": "MinifyX",
   "name": "minifyx",
   "description": "Collect the registered javascript and css files/chunks and minify them.",
   "author": "Thomas Jakobi <office@treehillstudio.com>",
   "private": true,
-  "devDependencies": {
-    "gulp": "^5.0.1",
-    "gulp-replace": "^1.1.4"
+  "version": "2.0.7",
+  "phpversion": "7.4",
+  "modxversion": "2.8",
+  "startYear": "2021",
+  "scripts": {
+    "build": "node build.js",
+    "build:bump": "node build.js bump"
   },
   "browserslist": [
-    "last 2 version",
     "> 1%",
-    "maintained node versions",
-    "not dead"
+    "defaults"
   ]
 }
