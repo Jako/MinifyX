@@ -400,6 +400,45 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Snippet">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sources" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Sources
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stylesheets" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Stylesheets
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#groups" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Groups
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -555,6 +594,45 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Snippet">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sources" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Sources
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stylesheets" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Stylesheets
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#groups" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Groups
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -653,7 +731,7 @@ combined and optionally minified assets.</p>
 </tr>
 <tr>
 <td>jsPlaceholder</td>
-<td>Name of javascript placeholder. Used when &amp;registerCss is set to placeholder</td>
+<td>Name of javascript placeholder. Used when &amp;registerJs is set to placeholder</td>
 <td>MinifyX.javascript</td>
 </tr>
 <tr>
@@ -663,34 +741,89 @@ combined and optionally minified assets.</p>
 </tr>
 <tr>
 <td>jsTpl</td>
-<td>Name of a template chunk for the JS tag. Placeholder "[[+file]]" must exists.</td>
+<td>Name of a template chunk for the JS tag. The placeholder "[[+file]]" must be present.</td>
 <td>The according system setting</td>
 </tr>
 <tr>
 <td>minifyCss</td>
-<td>Turn on CSS minification?</td>
+<td>Turn on CSS minification? The property overrides the minifyx.minifyCss system setting.</td>
 <td>0 (No)</td>
 </tr>
 <tr>
 <td>minifyJs</td>
-<td>Turn on JS minification?</td>
+<td>Turn on JS minification? The property overrides the minifyx.minifyJs system setting.</td>
 <td>0 (No)</td>
 </tr>
 <tr>
 <td>registerCss</td>
-<td>How do you want the CSS to be registered? It can be output in the placeholder, called in the "head" tag (Default) or output immediately (Print).</td>
+<td>How do you want the CSS to be registered? It can be output in the placeholder (<code>placeholder</code>), called in the "head" tag (<code>default</code>) or output immediately (<code>print</code>).</td>
 <td>placeholder</td>
 </tr>
 <tr>
 <td>registerJs</td>
-<td>How do you want the javascript to be registered? It can be output in the placeholder, called in the "head" tag (Startup), placed before the closing "body" tag (Default) or output immediately (Print).</td>
+<td>How do you want the javascript to be registered? It can be output in the placeholder (<code>placeholder</code>), called in the "head" tag (<code>startup</code>), placed before the closing "body" tag (<code>default</code>) or output immediately (<code>print</code>).</td>
 <td>placeholder</td>
 </tr>
 </tbody>
 </table>
+<h3 id="sources">Sources</h3>
+<p>The sources can be specified relative to the MODX base path (i.e.
+<code>assets/js/scripts.js</code>), as root-relative URL (i.e. <code>/assets/js/scripts.js</code>),
+with the MODX site URL or with the MODX base path in front. The sources can
+contain MODX system settings like <code>[[++assets_url]]</code> or <code>{assets_url}</code>.</p>
+<p>External sources (starting with <code>http://</code>, <code>https://</code> or <code>//</code>) are not combined.
+They are output before the combined file, so that the combined local files can
+use them.</p>
+<p>Files that don't exist and files with another extension than js, css, less or
+scss are skipped and logged in the MODX error log. The other files are combined
+anyway.</p>
+<h3 id="stylesheets">Stylesheets</h3>
+<p>Relative URLs in the combined stylesheets (i.e. <code>url(img/background.png)</code> or
+<code>url(../fonts/font.woff2)</code>) are rewritten to root-relative URLs, because the
+combined file is located in the MinifyX cache folder. This is done for the
+snippet and the plugin.</p>
+<p>An <code>@import</code> in a plain CSS file is not inlined. Browsers only process an
+<code>@import</code> at the top of a stylesheet, so it is usually ignored in a combined
+file. Add the imported file to the sources before the importing file instead.
+SCSS and LESS imports are inlined by the compiler.</p>
+<h3 id="groups">Groups</h3>
+<p>Sources that are used on every snippet call can be defined in the file
+<code>core/components/minifyx/config/groups.php</code>. The file has to return an array
+with the keys <code>css</code> and <code>js</code>. The sources of the groups are added before the
+sources of the snippet call.</p>
+<div class="language-php highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="cp">&lt;?php</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="k">return</span> <span class="p">[</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="s1">&#39;css&#39;</span> <span class="o">=&gt;</span> <span class="p">[</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>        <span class="s1">&#39;assets/css/bootstrap.min.css&#39;</span><span class="p">,</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="p">],</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="s1">&#39;js&#39;</span> <span class="o">=&gt;</span> <span class="p">[</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>        <span class="s1">&#39;assets/js/jquery.js&#39;</span><span class="p">,</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="p">],</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="p">];</span>
+</span></code></pre></div>
 <h2 id="plugin">Plugin</h2>
-<p>This plugin combines and optionally minifies the registered javascript and stylesheet files registered with the MODX API.</p>
+<p>This plugin combines and optionally minifies the registered javascript and
+stylesheet files registered with the MODX API. It processes only resources with
+an HTML content type.</p>
 <p>It can be configured with the MinifyX system settings.</p>
+<p>By default, the plugin does not work on resources with the <code>(blank)</code> template
+(<code>minifyx.tpl_only</code>). With the <code>minifyx.selection_type</code> and
+<code>minifyx.selection_range</code> system settings, the plugin can be restricted to or
+disabled for a list of resources. These settings don't affect the snippet.</p>
+<p>The registered stylesheets are output before the other registered assets. The
+order of the registered stylesheets and the order of the other registered
+assets (scripts, inline scripts and HTML blocks) are preserved. Only consecutive
+local files of the same type are combined in one file. So a page could get
+more than one combined file, if i.e. an inline script is registered between
+two script files.</p>
+<p>The following registered assets are output unchanged:</p>
+<ul>
+<li>External files (starting with <code>http://</code>, <code>https://</code> or <code>//</code>)</li>
+<li>Files matched by the <code>minifyx.excludeRegistered</code> system setting</li>
+<li>Files located in the MinifyX cache folder (i.e. added by the MinifyX snippet)</li>
+<li>Inline scripts, conditional comments and other HTML blocks</li>
+</ul>
+<p>If a combined file can't be generated, the original files are output instead.</p>
 <h2 id="system-settings">System Settings</h2>
 <p>MinifyX uses the following system settings in the namespace <code>minifyx</code>:</p>
 <table>
@@ -706,13 +839,13 @@ combined and optionally minified assets.</p>
 <tr>
 <td>minifyx.cachePath</td>
 <td>Cache Folder</td>
-<td>Specify the folder where the plugin will put the results of it’s work. You can specify a non-existent folder, it will be created automatically.</td>
+<td>Specify the folder where the plugin will put the results of its work. You can specify a non-existent folder, it will be created automatically. A relative path is located in the MODX base path. You can use the placeholders {base_path}, {assets_path} and {core_path}.</td>
 <td>assets/minifyx/</td>
 </tr>
 <tr>
 <td>minifyx.cacheUrl</td>
 <td>Cache URL</td>
-<td>Specify the URL where the plugin will put the results of it’s work. It has to point to the cache folder.</td>
+<td>Specify the URL where the plugin will put the results of its work. It has to point to the cache folder. A relative URL is prepended with the MODX base URL. You can use the placeholders {base_url} and {assets_url}.</td>
 <td>assets/minifyx/</td>
 </tr>
 <tr>
@@ -736,7 +869,7 @@ combined and optionally minified assets.</p>
 <tr>
 <td>minifyx.excludeRegistered</td>
 <td>Exclude Scripts and Styles</td>
-<td>A regular expression for excludeing files from processing.</td>
+<td>A regular expression for registered scripts and styles, that are output unchanged and are not combined or minified.</td>
 <td>#(scripts&#x7c;styles)_[a-z0-9]{11}.#i</td>
 </tr>
 <tr>
@@ -748,7 +881,7 @@ combined and optionally minified assets.</p>
 <tr>
 <td>minifyx.jsTpl</td>
 <td>Javascript Template</td>
-<td>Name of a template chunk for the JS tag. Placeholder "[[+file]]" must exists.</td>
+<td>Name of a template chunk for the JS tag. The placeholder "[[+file]]" must be present.</td>
 <td>tplMinifyXjs</td>
 </tr>
 <tr>
@@ -774,6 +907,24 @@ combined and optionally minified assets.</p>
 <td>Process Registered</td>
 <td>You can enable automatic processing of all registered scripts and styles of the page using the MinifyX plugin.</td>
 <td>No</td>
+</tr>
+<tr>
+<td>minifyx.selection_range</td>
+<td>Resource IDs for the Plugin</td>
+<td>A comma-separated list of resource IDs the MinifyX plugin should (not) work on. The setting minifyx.selection_type defines, if the resources are included or excluded.</td>
+<td>-</td>
+</tr>
+<tr>
+<td>minifyx.selection_type</td>
+<td>Selection Type for the Plugin</td>
+<td>If only the resources in minifyx.selection_range should be processed by the MinifyX plugin, change the value of this setting to <code>include</code>. With <code>exclude</code>, the resources in minifyx.selection_range are not processed.</td>
+<td>exclude</td>
+</tr>
+<tr>
+<td>minifyx.tpl_only</td>
+<td>Don’t Work on Resources with Blank Template</td>
+<td>Enable this, if the MinifyX plugin should not work on resources with the <code>(blank)</code> template.</td>
+<td>Yes</td>
 </tr>
 </tbody>
 </table>
