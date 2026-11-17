@@ -3,7 +3,7 @@
   "lowCaseName": "minifyx",
   "description": "Combine and minify JS and CSS files",
   "author": "Patrick Nijkamp, Vasily Naumkin, Sergej Shlokov, Thomas Jakobi",
-  "version": "2.0.7",
+  "version": "2.1.0",
   "package": {
     "elements": {
       "plugins": [
@@ -191,6 +191,22 @@
         "type": "combo-boolean",
         "area": "system",
         "value": "0"
+      },
+      {
+        "key": "tpl_only",
+        "type": "combo-boolean",
+        "area": "system",
+        "value": "1"
+      },
+      {
+        "key": "selection_type",
+        "area": "system",
+        "value": "exclude"
+      },
+      {
+        "key": "selection_range",
+        "area": "system",
+        "value": ""
       }
     ]
   },

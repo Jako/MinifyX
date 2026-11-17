@@ -82,9 +82,10 @@ if (!function_exists('changeSetting')) {
 
 if (!function_exists('changeSettingKey')) {
     /**
+     * Rename a system setting and keep its value.
+     *
      * @param modX $modx
      * @param string $key
-     * @param string $old
      * @param string $new
      */
     function changeSettingKey($modx, $key, $new)
@@ -93,18 +94,22 @@ if (!function_exists('changeSettingKey')) {
         $setting = $modx->getObject('modSystemSetting', [
             'key' => $key
         ]);
+        if (!$setting) {
+            return;
+        }
         /** @var modSystemSetting $newSetting */
         $newSetting = $modx->getObject('modSystemSetting', [
-            'key' => $key
+            'key' => $new
         ]);
-        if ($setting) {
-            if ($newSetting) {
-                $newSetting->set('value', $setting->get('value'));
-                $setting->remove();
-            } else {
-                $setting->set('key', $new);
-                $setting->save();
-            }
+        if (!$newSetting) {
+            // The key is the primary key, so the setting is copied instead of renamed
+            $newSetting = $modx->newObject('modSystemSetting');
+            $newSetting->fromArray($setting->toArray(), '', true, true);
+            $newSetting->set('key', $new);
+        }
+        $newSetting->set('value', $setting->get('value'));
+        if ($newSetting->save()) {
+            $setting->remove();
         }
     }
 }
@@ -191,7 +196,7 @@ switch ($options[xPDOTransport::PACKAGE_ACTION]) {
             changeSettingKey($modx, 'minifyx_minifyHtml', 'minifyx.minifyHtml');
             changeSetting($modx, 'minifyx.cacheFolder', '/assets/components/minifyx/cache/', 'assets/minifyx/');
             changeSetting($modx, 'minifyx.jsTpl', '<script src="[[+file]]"></script>', 'tplMinifyXjs');
-            changeSetting($modx, 'minifyx.cssTpl', '<link rel="stylesheet" href="[[+file]]" type="text/css"/>', 'tplMinifyXCss');
+            changeSetting($modx, 'minifyx.cssTpl', '<link rel="stylesheet" href="[[+file]]" type="text/css"/>', 'tplMinifyXcss');
         }
 
         if ($oldPackage && $oldPackage->compareVersion('2.0.5-pl', '>')) {

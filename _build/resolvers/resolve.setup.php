@@ -40,7 +40,7 @@ return array(
 content;
 
                 if (!file_put_contents($file, $content)) {
-                    $this->modx->log(xPDO::LOG_LEVEL_ERROR, 'Could not create file {core_path}components/minifyx/config/groups.php');
+                    $modx->log(xPDO::LOG_LEVEL_ERROR, 'Could not create file {core_path}components/minifyx/config/groups.php');
                     return false;
                 }
             }

@@ -14,11 +14,14 @@
 namespace TreehillStudio\MinifyX;
 
 use Assetic\Asset\AssetCollection;
+use Assetic\Asset\AssetInterface;
 use Assetic\Asset\FileAsset;
+use Assetic\Filter\CallablesFilter;
 use Assetic\Filter\JavaScriptMinifierFilter;
 use Assetic\Filter\LessphpFilter;
 use Assetic\Filter\ScssphpFilter;
 use Assetic\Filter\StylesheetMinifyFilter;
+use Assetic\Util\CssUtils;
 use DirectoryIterator;
 use Exception;
 use modX;
@@ -51,7 +54,7 @@ class MinifyX
      * The version
      * @var string $version
      */
-    public string $version = '2.0.7';
+    public string $version = '2.1.0';
 
     /**
      * The class options
@@ -128,6 +131,8 @@ class MinifyX
             'hashLength' => (int)$this->modx->getOption($this->namespace . '.hashLength', $options, 10, true),
         ]);
 
+        $this->options['cacheUrl'] = $this->prepareCacheUrl($this->options['cacheUrl']);
+
         $this->cacheOptions = [
             xPDO::OPT_CACHE_KEY => $this->namespace,
         ];
@@ -171,32 +176,59 @@ class MinifyX
     {
         $success = true;
 
-        // Optionally prepend cache path with MODX base path.
-        $path = trim($this->getOption('cachePath'));
-        if (strpos($path, MODX_BASE_PATH) === 0) {
-            $path = substr($path, strlen(MODX_BASE_PATH));
+        // Replace the path placeholders
+        $basePath = $this->modx->getOption('base_path', null, MODX_BASE_PATH);
+        $assetsPath = $this->modx->getOption('assets_path', null, MODX_ASSETS_PATH);
+        $corePath = $this->modx->getOption('core_path', null, MODX_CORE_PATH);
+        $path = str_replace(['{base_path}', '{assets_path}', '{core_path}'], [$basePath, $assetsPath, $corePath], trim($this->getOption('cachePath')));
+
+        // Prepend the cache path with the MODX base path, if it is not located in one of the MODX paths.
+        if (strpos($path, $basePath) !== 0 && strpos($path, $assetsPath) !== 0 && strpos($path, $corePath) !== 0) {
+            $path = $basePath . ltrim($path, '/');
         }
-        $path = MODX_BASE_PATH . rtrim($path, '/') . '/';
+        $path = rtrim($path, '/') . '/';
         $this->options['cachePath'] = $path;
 
         if (!file_exists($path)) {
             $cacheManager = $this->modx->getCacheManager();
             $success = $cacheManager->writeTree($path);
-            $success &= $cacheManager->writeTree($path . '/js/');
-            $success &= $cacheManager->writeTree($path . '/css/');
+            $success &= $cacheManager->writeTree($path . 'js/');
+            $success &= $cacheManager->writeTree($path . 'css/');
         }
         return $success;
     }
 
     /**
+     * Prepare the cache URL, a relative URL is prepended with the MODX base URL.
+     *
+     * @param string $url
+     * @return string
+     */
+    protected function prepareCacheUrl(string $url): string
+    {
+        $url = str_replace(['{base_url}', '{assets_url}'], [
+            $this->modx->getOption('base_url', null, MODX_BASE_URL),
+            $this->modx->getOption('assets_url', null, MODX_ASSETS_URL)
+        ], trim($url));
+        if (strpos($url, '/') !== 0 && strpos($url, '://') === false) {
+            $url = $this->modx->getOption('base_url', null, MODX_BASE_URL) . $url;
+        }
+        return rtrim($url, '/') . '/';
+    }
+
+    /**
      * Prepare comma separated string or array of files.
+     *
+     * External files are collected in $externalFiles, if that parameter is
+     * set. Otherwise they are registered with the MODX register methods.
      *
      * @param array|string $files
      * @param string $type Type of files
      * @param string $position The register position of files
+     * @param array|null $externalFiles
      * @return array
      */
-    public function prepareFiles($files, string $type = '', string $position = ''): array
+    public function prepareFiles($files, string $type = '', string $position = '', ?array &$externalFiles = null): array
     {
         if (is_string($files)) {
             $files = array_map('trim', explode(',', $files));
@@ -205,13 +237,19 @@ class MinifyX
             return [];
         }
         $siteUrl = $this->modx->getOption('site_url');
+        $baseUrl = '/' . ltrim($this->modx->getOption('base_url', null, '/'), '/');
         $output = array();
         foreach ($files as $file) {
             if (!empty($file) && substr($file, 0, 1) !== '-') {
+                // Strip the base path and the site URL, the remaining file is relative to the base URL
                 $file = (strpos($file, MODX_BASE_PATH) === 0) ? substr($file, strlen(MODX_BASE_PATH)) : $file;
-                $file = (strpos($file, $siteUrl) === 0) ? substr($file, strlen($siteUrl)) : $file;
-                if (preg_match('#https?://#', $file)) {
+                $file = ($siteUrl && strpos($file, $siteUrl) === 0) ? substr($file, strlen($siteUrl)) : $file;
+                if (preg_match('#https?://#', $file) || strpos($file, '//') === 0) {
                     // Handle external assets
+                    if (is_array($externalFiles)) {
+                        $externalFiles[] = $file;
+                        continue;
+                    }
                     if ($type == 'css') {
                         $this->modx->regClientCSS($file);
                     } else {
@@ -227,7 +265,7 @@ class MinifyX
                     continue;
                 }
                 if (strpos($file, '/') !== 0) {
-                    $file = '/' . $file;
+                    $file = $baseUrl . $file;
                 }
                 if ($path = parse_url($file, PHP_URL_PATH)) {
                     $output[] = $path;
@@ -244,29 +282,35 @@ class MinifyX
                 $this->modx->log(xPDO::LOG_LEVEL_ERROR, 'Collected asset collection: ' . print_r($files, true));
             }
 
-            if (substr($this->modx->getOption('base_path'), -strlen($this->modx->getOption('base_url'))) === $this->modx->getOption('base_url')) {
-                $webrootPath = substr($this->modx->getOption('base_path'), 0, -strlen($this->modx->getOption('base_url'))) . '/';
-            } else {
-                $webrootPath = $this->modx->getOption('base_path');
-            }
+            $webrootPath = $this->getWebrootPath();
             $collection = new AssetCollection();
             foreach ($files as $file) {
-                $file = $webrootPath . ltrim($file, '/');
-                $extension = pathinfo($file, PATHINFO_EXTENSION);
+                // Remove a query string i.e. used for cache busting
+                $urlPath = '/' . ltrim(parse_url($file, PHP_URL_PATH) ?: $file, '/');
+                $file = $webrootPath . ltrim($urlPath, '/');
+                $extension = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+                if (!is_file($file)) {
+                    $this->modx->log(xPDO::LOG_LEVEL_ERROR, 'The file ' . $file . ' was skipped, it does not exist.', '', $this->packageName);
+                    continue;
+                }
                 if ($this->getOption('debug')) {
                     $this->modx->log(xPDO::LOG_LEVEL_ERROR, 'File added to the asset collection: ' . $file);
                 }
                 switch ($extension) {
                     case 'js':
-                    case 'css':
                         $collection->add(new FileAsset($file));
                         break;
+                    case 'css':
+                        $collection->add(new FileAsset($file, [$this->getCssRewriteFilter($urlPath)]));
+                        break;
                     case 'scss':
-                        $collection->add(new FileAsset($file, array(new ScssphpFilter())));
+                        $collection->add(new FileAsset($file, [new ScssphpFilter(), $this->getCssRewriteFilter($urlPath)]));
                         break;
                     case 'less':
-                        $collection->add(new FileAsset($file, array(new LessphpFilter())));
+                        $collection->add(new FileAsset($file, [new LessphpFilter(), $this->getCssRewriteFilter($urlPath)]));
                         break;
+                    default:
+                        $this->modx->log(xPDO::LOG_LEVEL_ERROR, 'The file ' . $file . ' was skipped, only js, css, scss and less files can be combined.', '', $this->packageName);
                 }
             }
             if ($minify) {
@@ -285,16 +329,68 @@ class MinifyX
     }
 
     /**
+     * Get a filter, that rewrites the relative URLs in a stylesheet to root-relative URLs.
+     *
+     * The combined file is located in the cache folder, so the relative URLs
+     * of the source stylesheet would point to the wrong location.
+     *
+     * @param string $urlPath The root-relative URL of the source stylesheet
+     * @return CallablesFilter
+     */
+    protected function getCssRewriteFilter(string $urlPath): CallablesFilter
+    {
+        $baseUrl = rtrim(dirname($urlPath), '/') . '/';
+        return new CallablesFilter(null, function (AssetInterface $asset) use ($baseUrl) {
+            $asset->setContent(CssUtils::filterReferences($asset->getContent(), function ($matches) use ($baseUrl) {
+                $url = $matches['url'];
+                if ($url === '' || preg_match('#^([a-z][a-z0-9+.-]*:|/|\#)#i', $url)) {
+                    // absolute, protocol-relative, root-relative, data URI or fragment
+                    return $matches[0];
+                }
+                return str_replace($url, $this->normalizeUrlPath($baseUrl . $url), $matches[0]);
+            }));
+        });
+    }
+
+    /**
+     * Resolve the dot segments of an URL path.
+     *
+     * @param string $url
+     * @return string
+     */
+    protected function normalizeUrlPath(string $url): string
+    {
+        $suffix = '';
+        if (preg_match('/[?#].*$/', $url, $match)) {
+            $suffix = $match[0];
+            $url = substr($url, 0, -strlen($suffix));
+        }
+        $segments = [];
+        foreach (explode('/', $url) as $segment) {
+            if ($segment === '..') {
+                if (count($segments) > 1) {
+                    array_pop($segments);
+                }
+            } elseif ($segment !== '.') {
+                $segments[] = $segment;
+            }
+        }
+        return implode('/', $segments) . $suffix;
+    }
+
+    /**
      * @param string $content
      * @param string $type
      * @param string $hashPrefix
+     * @param string $filename Optional filename, the type specific filename option is used if empty
+     * @param bool|null $minified Optional state of the minification, the type specific minify option is used if null
      * @return string
      * @throws Exception
      */
-    public function saveAssetFile(string $content, string $type, string $hashPrefix): string
+    public function saveAssetFile(string $content, string $type, string $hashPrefix, string $filename = '', ?bool $minified = null): string
     {
-        $filename = $this->getOption($type . 'Filename') . $hashPrefix;
-        $extension = $this->getOption($type . 'Ext');
+        $filename = ($filename ?: $this->getOption($type . 'Filename')) . $hashPrefix;
+        $extension = ($minified === null) ? $this->getOption($type . 'Ext') : (($minified ? '.min.' : '.') . $type);
         $hash = substr(hash('sha1', $content), 0, $this->getOption('hashLength'));
         $filename = $filename . $hash . $extension;
         $folderPath = $this->getOption('cachePath') . $type . '/';
@@ -316,7 +412,8 @@ class MinifyX
         $types = ['js', 'css'];
         foreach ($types as $type) {
             $folderPath = $this->getOption('cachePath') . $type . '/';
-            $filenameRegex = '~' . $this->getOption($type . 'Filename') . '_[hbp]~';
+            // Match all generated files, the snippet could use a different filename than the system setting
+            $filenameRegex = '~_[hbp][0-9a-f]+\.(min\.)?' . $type . '$~';
 
             try {
                 $files = new DirectoryIterator($folderPath);
@@ -334,5 +431,53 @@ class MinifyX
         $this->modx->cacheManager->refresh([
             'minifyx' => [],
         ]);
+    }
+
+    /**
+     * Get the filesystem path of the webroot.
+     *
+     * @return string
+     */
+    public function getWebrootPath(): string
+    {
+        $basePath = $this->modx->getOption('base_path');
+        $baseUrl = $this->modx->getOption('base_url');
+        if ($baseUrl && substr($basePath, -strlen($baseUrl)) === $baseUrl) {
+            return substr($basePath, 0, -strlen($baseUrl)) . '/';
+        }
+        return $basePath;
+    }
+
+    /**
+     * Check if a local asset URL points to the MinifyX cache folder.
+     *
+     * @param string $url
+     * @return bool
+     */
+    public function isCacheUrl(string $url): bool
+    {
+        $cacheUrl = $this->normalizeUrl($this->getOption('cacheUrl'));
+        return $cacheUrl !== '' && strpos($this->normalizeUrl($url), $cacheUrl) === 0;
+    }
+
+    /**
+     * Normalize a local URL to a path relative to the MODX base URL.
+     *
+     * @param string $url
+     * @return string
+     */
+    protected function normalizeUrl(string $url): string
+    {
+        $siteUrl = $this->modx->getOption('site_url');
+        $baseUrl = $this->modx->getOption('base_url', null, '/');
+        $url = trim($url);
+        if ($siteUrl && strpos($url, $siteUrl) === 0) {
+            $url = substr($url, strlen($siteUrl));
+        }
+        $url = (string)parse_url($url, PHP_URL_PATH);
+        if ($baseUrl !== '/' && strpos($url, $baseUrl) === 0) {
+            $url = substr($url, strlen($baseUrl));
+        }
+        return ltrim($url, '/');
     }
 }

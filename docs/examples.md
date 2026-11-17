@@ -43,7 +43,10 @@ If they are called cached, the generated minified files are only created when
 the resource is not cached, so you can't change the minified assets on the fly.
 
 There is an internal MinifyX cache used, so it is not a real issue to call the
-snippet uncached.
+snippet uncached. The combined files are only generated again, when a source
+file is changed, added or removed, when the site cache is refreshed or when
+&forceUpdate is enabled. Changes in files imported by SCSS or LESS sources are
+only detected after a site cache refresh or with &forceUpdate.
 
 ### Use without placeholder
 
@@ -84,8 +87,8 @@ setting. If this setting is enabled, the added files to the assets collection ar
 logged with the server path. 
 
 All errors inside Assetic are logged without enabling this system setting.
-Assetic will throw an error, when the file is not found, parts of the scripts
-and styles are invalid etc.
+Assetic will throw an error, when parts of the scripts and styles are invalid
+etc. Files that don't exist or can't be combined are skipped and logged too.
 
 So please use the MODX error log first to locate MinifyX issues. If you detect a
 bug inside MinifyX, feel free to add it to the [bug

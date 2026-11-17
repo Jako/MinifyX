@@ -11,6 +11,16 @@ use xPDO;
 
 class OnSiteRefresh extends Plugin
 {
+    /**
+     * The resource selection settings must not prevent clearing the cache.
+     *
+     * {@inheritDoc}
+     */
+    public function init(): bool
+    {
+        return true;
+    }
+
     public function process()
     {
         if (!$this->minifyx->prepareCachePath()) {
